@@ -1,10 +1,19 @@
-import { useState } from "react";
 import "./App.css";
 
+import { Routes, Route } from "react-router-dom";
+
+import Homepage from "../pages/Homepage";
+import Cartpage from "../pages/Cartpage";
+
 function App() {
-  const [count, setCount] = useState(0);
-  return;
-  <div className="app"></div>;
+  return (
+    <div className="app">
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/cartpage" element={<Cartpage />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;
