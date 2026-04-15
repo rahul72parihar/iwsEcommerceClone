@@ -3,11 +3,11 @@
 /* ========================= */
 
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   width: 100%;
   font-family: source-sans-pro, sans-serif;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 /* ========================= */
@@ -22,9 +22,9 @@
   font-weight: 500;
   min-height: 53px;
   position: relative;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  will-change: transform;
 }
 .headerBannerContainer {
   display: flex;
@@ -62,10 +62,10 @@
 }
 
 @media only screen and (min-width: 768px) {
-    .headerBanner{
-        display: flex;
-        justify-content: center;
-    }
+  .headerBanner {
+    display: flex;
+    justify-content: center;
+  }
   .headerBannerContainer {
     width: 100%;
     min-width: 100%;
@@ -74,4 +74,64 @@
     margin: 0 40px;
     padding: 0 40px;
   }
+}
+
+@media only screen and (min-width: 992px) {
+  .header {
+    display: none;
+  }
+}
+
+/* ========================= */
+/* MOBILE NAV */
+/* ========================= */
+
+.mobileNavContainer {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: white;
+  transition: box-shadow 0.3s ease;
+  height: 42px;
+  max-height: 42px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  overflow: visible;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.mobileNavLogo {
+  z-index: 10;
+}
+
+.headerSmall {
+  position: sticky;
+  top: 0; /* important */
+  z-index: 1000;
+}
+
+.headerSmall .headerBanner {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.headerSmall .mobileNav {
+  position: relative;
+  pointer-events: none;
+  transform: translateY(-53px);
+}
+
+.mobileNavLogo{
+    width: 80px;
+    transform: translateY(-10px);
+
+}
+
+.headerSmall .mobileNav .mobileNavLogo{
+  width: 60px;
+  transform: translateY(0);
 }
