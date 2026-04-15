@@ -1,7 +1,9 @@
+import Header from "../components/layout/Header";
 export default function Homepage() {
   return (
-    <div>
-      <h1>Homepage</h1>
+    <div className="homePage">
+        <Header/>
+        <div className="longlong"></div>
     </div>
   );
 }

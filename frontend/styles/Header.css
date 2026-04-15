@@ -1,0 +1,77 @@
+/* ========================= */
+/* HEADER BASE */
+/* ========================= */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  font-family: source-sans-pro, sans-serif;
+}
+
+/* ========================= */
+/* TOP BANNER */
+/* ========================= */
+
+.headerBanner {
+  background-color: var(--store-red);
+  color: white;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 53px;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+.headerBannerContainer {
+  display: flex;
+  max-width: 530px;
+  margin: 0 auto;
+  padding: 8px 5px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.headerBannerContainer > p {
+  overflow-wrap: break-word;
+}
+
+/* ========================= */
+/* BANNER BUTTON */
+/* ========================= */
+
+.headerBannerButton {
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 4px;
+  width: 96px;
+  min-width: 96px;
+  max-width: 96px;
+  font-family: source-sans-pro, sans-serif;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.headerBannerIcon {
+  font-size: 16px !important;
+}
+
+@media only screen and (min-width: 768px) {
+    .headerBanner{
+        display: flex;
+        justify-content: center;
+    }
+  .headerBannerContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    justify-content: space-between;
+    margin: 0 40px;
+    padding: 0 40px;
+  }
+}
