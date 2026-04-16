@@ -2,26 +2,19 @@ import { HiOutlineBars3 } from "react-icons/hi2";
 import { VscSearch } from "react-icons/vsc";
 import { CiHeart } from "react-icons/ci";
 import { SlHandbag } from "react-icons/sl";
-import logo from "../../../assets/logo.webp";
+import Logo from "../../../assets/Logo";
 export default function MobileNavbar() {
   return (
     <div className="mobileNav">
       <div className="mobileNavContainer">
         <div className="sidebarButton">
-          <span className="sidebarButtonIcon">
+          <span className="mobileSidebarButtonIcon" onClick={()=>console.log("Sidebar Clicked")}>
             <HiOutlineBars3 />
           </span>
         </div>
 
         {/* Logo */}
-        <div>
-          <img
-            className="mobileNavLogo"
-            src={logo}
-            alt="logo of souled store"
-          />
-        </div>
-
+        <Logo className="mobileNavLogo"/>
         {/* Right Icons */}
         <div className="mobileNavIcons">
           <span className="icon">

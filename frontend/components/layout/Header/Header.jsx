@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../../styles/Header.css";
+import "../../../styles/Navbar.css";
 import MobileNavbar from "./MobileNavbar";
 import HeaderRedBanner from "./HeaderRedBanner";
 import DesktopNavbar from "./DesktopNavbar";
