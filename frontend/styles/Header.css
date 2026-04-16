@@ -77,9 +77,6 @@
 }
 
 @media only screen and (min-width: 992px) {
-  .header {
-    display: none;
-  }
 }
 
 /* ========================= */
@@ -134,4 +131,10 @@
 .headerSmall .mobileNav .mobileNavLogo{
   width: 60px;
   transform: translateY(0);
+}
+
+.DesktopNav{
+  background-color: black;
+  height: 200px;
+
 }

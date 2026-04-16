@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../../../styles/Header.css";
 import MobileNavbar from "./MobileNavbar";
 import HeaderRedBanner from "./HeaderRedBanner";
+import DesktopNavbar from "./DesktopNavbar";
 function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
@@ -38,13 +39,13 @@ function Header() {
   }, []);
 
   return (
+
     <header className={`header ${scrolled ? "headerSmall" : ""}`}>
-      {/* Top Red Banner */}
-      <HeaderRedBanner />
-      {/* Navbar */}
-      {isMobile && <MobileNavbar />}
-      {/* <Desktop Navbar /> */}
+      {isMobile && <HeaderRedBanner /> }
+      {isMobile && <MobileNavbar /> }
+      {!isMobile && <DesktopNavbar /> }
     </header>
+
   );
 }
 
