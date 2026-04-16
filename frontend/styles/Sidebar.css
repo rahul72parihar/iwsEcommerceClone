@@ -1,0 +1,64 @@
+/* menu button */
+.menu-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* overlay (dark background) */
+.sidebarOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9;
+}
+
+/* sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px; /* hidden */
+  width: 300px;
+  height: 100%;
+  background: white;
+  z-index: 2000;
+  transition: left 0.3s ease;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* when open */
+.sidebar.active {
+  left: 0;
+}
+
+/* close button */
+.sidebarCloseBtn {
+  font-size: 18px;
+  background-color: rgb(203, 203, 203);
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* TABLETS  */
+@media (min-width: 568px) and (max-width: 991px) {
+    .sidebar {
+      left: -500px; /* hidden */
+      width: 500px;
+    }
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    width: 600px;
+    left: -600px; /* match width */
+  }
+}
+
+/* empty content */
+/* .sidebar-content {
+} */
