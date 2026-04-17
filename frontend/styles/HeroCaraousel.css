@@ -1,7 +1,7 @@
 /* ================= MOBILE (default) ================= */
 .hero {
   width: 100%;
-  height: 50vh; /* smaller for mobile */
+  height: 40vh; /* smaller for mobile */
   background-size: cover;
   background-position: center;
   position: relative;
@@ -27,7 +27,7 @@
 }
 
 .hero-content h1 {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
 }
 
 .hero-content button {
@@ -55,13 +55,13 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.478);
-  color: white;
+background: rgba(255, 255, 255, 0.9);
+  color: black;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 3;
+z-index: 10;
   font-size: 30px;
 }
 

@@ -5,7 +5,7 @@ import "../styles/CategoryCarousel.css";
 import "../styles/ProductSection.css";
 
 const CATEGORIES = ['MEN', 'WOMEN', 'SHOES'];
-const ITEM_WIDTH = 300;
+const ITEM_WIDTH = 320;
 const SCROLL_AMOUNT = ITEM_WIDTH + 24; // item + gap
 
 export default function CategoryCarousel({ title = "Featured by Category" }) {
@@ -55,6 +55,18 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
       <div className="categoryCarouselsContainer">
         {CATEGORIES.map(category => {
           const products = categorySections[category] || [];
+          console.log(`${category} products count:`, products.length);
+
+          if (products.length === 0) {
+            return (
+              <div key={category} className="categoryCarouselWrapper">
+                <h3 className="categoryTitle">{category}</h3>
+                <div className="carouselContainer">
+                  <div className="noProducts">No products available for {category}</div>
+                </div>
+              </div>
+            );
+          }
 
           return (
             <div key={category} className="categoryCarouselWrapper">

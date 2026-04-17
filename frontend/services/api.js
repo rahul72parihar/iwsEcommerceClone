@@ -35,6 +35,18 @@ export const apiService = {
     });
   },
 
+  getProduct: (id) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const product = hardcodedProductsData.find(p => p.id === id);
+        resolve({
+          data: product || null,
+          status: product ? 'success' : 'not_found'
+        });
+      }, API_DELAY);
+    });
+  },
+
   getCategories: () => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -46,4 +58,5 @@ export const apiService = {
     });
   }
 };
+
 

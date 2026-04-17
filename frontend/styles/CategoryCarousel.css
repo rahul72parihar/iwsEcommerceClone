@@ -58,12 +58,13 @@
 
 @media (min-width: 1200px) {
   .categoryCarouselsContainer {
-    flex-direction: row;
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
   }
 
   .categoryCarouselWrapper {
-    flex: 1;
+    width: 100%;
   }
 }
 

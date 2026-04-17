@@ -1,1 +1,0 @@
-export const categoriesList = ["MEN", "WOMEN", "SHOES"];

@@ -3,7 +3,7 @@ const WOMEN_DRESS_IMAGE = "https://plus.unsplash.com/premium_photo-1675186049409
 const SHOE_IMAGE = "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 export const hardcodedProductsData = [
-  // MEN SHIRTS - 20 items ALL SAME IMAGE
+  // MEN SHIRTS - 20 items
   { id: "men-1", title: "Men's Classic White Shirt 1", price: "29.99", image: MEN_SHIRT_IMAGE, category: "MEN" },
   { id: "men-2", title: "Men's Blue Oxford Shirt 2", price: "34.99", image: MEN_SHIRT_IMAGE, category: "MEN" },
   { id: "men-3", title: "Men's Denim Shirt 3", price: "39.99", image: MEN_SHIRT_IMAGE, category: "MEN" },
@@ -25,8 +25,8 @@ export const hardcodedProductsData = [
   { id: "men-19", title: "Men's Tuxedo Shirt 19", price: "48.99", image: MEN_SHIRT_IMAGE, category: "MEN" },
   { id: "men-20", title: "Men's Dress Shirt 20", price: "52.99", image: MEN_SHIRT_IMAGE, category: "MEN" },
   
-  // WOMEN DRESSES - 20 items ALL SAME IMAGE
-{ id: "women-1", title: "Women's Maxi Dress 1", price: "59.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN", trending: true },
+  // WOMEN DRESSES - 20 items 
+  { id: "women-1", title: "Women's Maxi Dress 1", price: "59.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN", trending: true },
   { id: "women-2", title: "Women's Cocktail Dress 2", price: "79.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN" },
   { id: "women-3", title: "Women's Summer Dress 3", price: "49.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN" },
   { id: "women-4", title: "Women's Evening Gown 4", price: "129.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN" },
@@ -47,8 +47,8 @@ export const hardcodedProductsData = [
   { id: "women-19", title: "Women's Peplum Dress 19", price: "82.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN" },
   { id: "women-20", title: "Women's Sheath Dress 20", price: "94.99", image: WOMEN_DRESS_IMAGE, category: "WOMEN" },
   
-  // SHOES - 20 items ALL SAME IMAGE
-{ id: "shoes-1", title: "Men's Leather Shoes 1", price: "89.99", image: SHOE_IMAGE, category: "SHOES", trending: true },
+  // SHOES - 20 items 
+  { id: "shoes-1", title: "Men's Leather Shoes 1", price: "89.99", image: SHOE_IMAGE, category: "SHOES", trending: true },
   { id: "shoes-2", title: "Women's Heels 2", price: "129.99", image: SHOE_IMAGE, category: "SHOES" },
   { id: "shoes-3", title: "Sneakers 3", price: "79.99", image: SHOE_IMAGE, category: "SHOES" },
   { id: "shoes-4", title: "Boots 4", price: "149.99", image: SHOE_IMAGE, category: "SHOES" },
@@ -71,4 +71,3 @@ export const hardcodedProductsData = [
 ];
 
 export const categoriesList = ["MEN", "WOMEN", "SHOES"];
-
