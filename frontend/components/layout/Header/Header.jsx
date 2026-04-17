@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../../../styles/Header.css";
 import "../../../styles/Navbar.css";
 import MobileNavbar from "./MobileNavbar";
+import MobileNavbarCategory from "./MobileNavbarCategory";
 import HeaderRedBanner from "./HeaderRedBanner";
 import DesktopNavbar from "./DesktopNavbar";
 function Header() {
@@ -44,6 +45,7 @@ function Header() {
     <header className={`header ${scrolled ? "headerSmall" : ""}`}>
       {isMobile && <HeaderRedBanner /> }
       {isMobile && <MobileNavbar /> }
+      {isMobile && <MobileNavbarCategory /> }
       {!isMobile && <DesktopNavbar /> }
     </header>
 
