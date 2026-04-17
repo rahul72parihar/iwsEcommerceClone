@@ -3,6 +3,7 @@ import { VscSearch } from "react-icons/vsc";
 import { CiHeart } from "react-icons/ci";
 import { SlHandbag } from "react-icons/sl";
 import Logo from "../../../assets/Logo";
+import MobileNavbarCategory from "./MobileNavbarCategory";
 export default function MobileNavbar() {
   return (
     <div className="mobileNav">
@@ -28,6 +29,7 @@ export default function MobileNavbar() {
           </span>
         </div>
       </div>
+      <MobileNavbarCategory/>
     </div>
   );
 }

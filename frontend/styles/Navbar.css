@@ -93,6 +93,7 @@
 .desktopNavLeft {
   justify-content: flex-start;
   display: flex;
+  gap: 20px;
 }
 
 .desktopNavLeft .sidebarButtonIcon {
@@ -107,6 +108,24 @@
   font-size: 30px;
   align-self: center;
 }
+
+.desktopCategories {
+  display: flex;
+  gap: 20px;
+}
+
+.desktopCategories .categoryItem {
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.desktopCategories .categoryItem:hover {
+  color: red;
+}
+
+
 /* LOGO SECTION */
 .desktopNavCenter {
   justify-content: flex-center;

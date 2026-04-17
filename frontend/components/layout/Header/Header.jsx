@@ -45,7 +45,6 @@ function Header() {
     <header className={`header ${scrolled ? "headerSmall" : ""}`}>
       {isMobile && <HeaderRedBanner /> }
       {isMobile && <MobileNavbar /> }
-      {isMobile && <MobileNavbarCategory /> }
       {!isMobile && <DesktopNavbar /> }
     </header>
 

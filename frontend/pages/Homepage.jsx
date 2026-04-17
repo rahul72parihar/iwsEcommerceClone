@@ -1,6 +1,7 @@
 import Header from "../components/layout/Header/Header";
 import HeroCarousel from "../components/HeroCaraousel";
 import Sidebar from "../components/layout/Sidebar/Sidebar";
+import Footer from "../components/layout/Footer";
 export default function Homepage() {
   return (
     <div className="homePage">
@@ -11,8 +12,8 @@ export default function Homepage() {
       {/* <CategoriesSection />
       <ProductSection title="New Arrivals" />
       <OfferBanner />
-      <ProductSection title="Best Sellers" />
-      <Footer /> */}
+      <ProductSection title="Best Sellers" /> */}
+      <Footer />
     </div>
   );
 }

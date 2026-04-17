@@ -65,6 +65,7 @@
   .headerBanner {
     display: flex;
     justify-content: center;
+    /* display: none; */
   }
   .headerBannerContainer {
     width: 100%;

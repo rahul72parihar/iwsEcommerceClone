@@ -6,7 +6,7 @@ import { BsMic } from "react-icons/bs";
 
 export default function DesktopNavbar() {
   const [query, setQuery] = useState("");
-
+  const categories = ["MEN", "WOMEN", "SHOES"];
   const handleSearch = () => {
     if (!query.trim()) return;
 
@@ -31,6 +31,13 @@ export default function DesktopNavbar() {
           <span className="sidebarButtonIcon">
             <HiOutlineBars3 />
           </span>
+          <div className="desktopCategories">
+    {categories.map((cat) => (
+      <span key={cat} className="categoryItem">
+        {cat}
+      </span>
+    ))}
+  </div>
         </div>
 
         {/* Center Logo (wrap it!) */}
