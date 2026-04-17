@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MobileNavbarCategory() {
+  const navigate = useNavigate();
   const [active, setActive] = useState("MEN");
   const categories = ["MEN", "WOMEN", "SHOES"];
   return (
@@ -9,7 +11,10 @@ export default function MobileNavbarCategory() {
         <div
           key={cat}
           className={`categoryItem ${active === cat ? "active" : ""}`}
-          onClick={() => setActive(cat)}
+          onClick={() => {
+            setActive(cat);
+            navigate(`/${cat.toLowerCase()}`);
+          }}
         >
           {cat}
         </div>

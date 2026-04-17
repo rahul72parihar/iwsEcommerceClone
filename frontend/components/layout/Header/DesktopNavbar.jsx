@@ -3,9 +3,11 @@ import Logo from "../../../assets/Logo";
 import { HiOutlineBars3 } from "react-icons/hi2";
 import { FiSearch, FiUser, FiHeart, FiShoppingCart } from "react-icons/fi";
 import { BsMic } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 export default function DesktopNavbar() {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
   const categories = ["MEN", "WOMEN", "SHOES"];
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -33,7 +35,12 @@ export default function DesktopNavbar() {
           </span>
           <div className="desktopCategories">
     {categories.map((cat) => (
-      <span key={cat} className="categoryItem">
+      <span 
+        key={cat} 
+        className="categoryItem"
+        onClick={() => navigate(`/${cat.toLowerCase()}`)}
+        style={{cursor: 'pointer'}}
+      >
         {cat}
       </span>
     ))}
@@ -41,7 +48,7 @@ export default function DesktopNavbar() {
         </div>
 
         {/* Center Logo (wrap it!) */}
-        <div className="desktopNavCenter">
+        <div className="desktopNavCenter" style={{cursor: 'pointer'}} onClick={() => navigate('/')}>
           <Logo className="desktopLogo" />
         </div>
 

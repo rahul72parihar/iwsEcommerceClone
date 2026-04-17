@@ -3,8 +3,10 @@ import { VscSearch } from "react-icons/vsc";
 import { CiHeart } from "react-icons/ci";
 import { SlHandbag } from "react-icons/sl";
 import Logo from "../../../assets/Logo";
+import { useNavigate } from "react-router-dom";
 import MobileNavbarCategory from "./MobileNavbarCategory";
 export default function MobileNavbar() {
+  const navigate = useNavigate();
   return (
     <div className="mobileNav">
       <div className="mobileNavContainer">
@@ -15,7 +17,7 @@ export default function MobileNavbar() {
         </div>
 
         {/* Logo */}
-        <Logo className="mobileNavLogo"/>
+        <Logo className="mobileNavLogo" style={{cursor: 'pointer'}} onClick={() => navigate('/')}/>
         {/* Right Icons */}
         <div className="mobileNavIcons">
           <span className="icon">
