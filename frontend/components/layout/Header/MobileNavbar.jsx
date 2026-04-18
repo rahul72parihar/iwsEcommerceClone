@@ -4,14 +4,17 @@ import { CiHeart } from "react-icons/ci";
 import { SlHandbag } from "react-icons/sl";
 import Logo from "../../../assets/Logo";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../../../src/store/slices/uiSlice";
 import MobileNavbarCategory from "./MobileNavbarCategory";
 export default function MobileNavbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="mobileNav">
       <div className="mobileNavContainer">
         <div className="sidebarButton">
-          <span className="mobileSidebarButtonIcon" onClick={()=>console.log("Sidebar Clicked")}>
+          <span className="mobileSidebarButtonIcon" onClick={() => dispatch(toggleSidebar())}>
             <HiOutlineBars3 />
           </span>
         </div>
@@ -23,10 +26,10 @@ export default function MobileNavbar() {
           <span className="icon">
             <VscSearch />
           </span>
-          <span className="icon">
+          <span className="icon" onClick={() => navigate('/wishlist')}>
             <CiHeart />
           </span>
-          <span className="icon">
+          <span className="icon" onClick={() => navigate('/cartpage')}>
             <SlHandbag />
           </span>
         </div>

@@ -4,10 +4,13 @@ import { HiOutlineBars3 } from "react-icons/hi2";
 import { FiSearch, FiUser, FiHeart, FiShoppingCart } from "react-icons/fi";
 import { BsMic } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../../../src/store/slices/uiSlice";
 
 export default function DesktopNavbar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const categories = ["MEN", "WOMEN", "SHOES"];
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -30,7 +33,7 @@ export default function DesktopNavbar() {
 
         {/* Left */}
         <div className="desktopNavLeft">
-          <span className="sidebarButtonIcon">
+          <span className="sidebarButtonIcon" onClick={() => dispatch(toggleSidebar())}>
             <HiOutlineBars3 />
           </span>
           <div className="desktopCategories">
@@ -75,9 +78,9 @@ export default function DesktopNavbar() {
 
           {/* Action Icons */}
           <div className="navIcons">
-            <FiUser />
-            <FiHeart />
-            <FiShoppingCart />
+            <FiUser onClick={() => navigate('/profile')} style={{cursor: 'pointer'}} />
+            <FiHeart onClick={() => navigate('/wishlist')} style={{cursor: 'pointer'}} />
+            <FiShoppingCart onClick={() => navigate('/cartpage')} style={{cursor: 'pointer'}} />
           </div>
 
         </div>
