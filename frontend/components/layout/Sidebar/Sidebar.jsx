@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar, closeSidebar } from "../../../src/store/slices/uiSlice";
 import "../../../styles/Sidebar.css";
 
-// useEffect(() => {
-//   document.body.classList.toggle("no-scroll", open);
-// }, [open]);
-
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.ui.isSidebarOpen);
+
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       document.body.classList.add("no-scroll");
     } else {
       document.body.classList.remove("no-scroll");
@@ -17,18 +17,22 @@ export default function Sidebar() {
     return () => {
       document.body.classList.remove("no-scroll");
     };
-  }, [open]);
-  console.log(document.body.classList);
+  }, [isOpen]);
+
+  const handleClose = () => {
+    dispatch(toggleSidebar());
+  };
+
   return (
     <>
       {/* Overlay */}
-      {open && (
-        <div className="sidebarOverlay" onClick={() => setOpen(false)} />
+      {isOpen && (
+        <div className="sidebarOverlay" onClick={handleClose} />
       )}
 
       {/* Sidebar */}
-      <div className={`sidebar ${open ? "active" : ""}`}>
-        <button className="sidebarCloseBtn" onClick={() => setOpen(false)}>
+      <div className={`sidebar ${isOpen ? "active" : ""}`}>
+        <button className="sidebarCloseBtn" onClick={handleClose}>
           ✕
         </button>
 

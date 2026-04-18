@@ -1,24 +1,45 @@
 import "../styles/App.css";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
+
+import Header from "../components/layout/Header/Header";
+import Sidebar from "../components/layout/Sidebar/Sidebar";
+import Footer from "../components/layout/Footer";
 
 import Homepage from "../pages/Homepage";
 import Cartpage from "../pages/Cartpage";
+import WishlistPage from "../pages/WishlistPage";
+import ProfilePage from "../pages/ProfilePage";
 import CategoryPage from "../pages/CategoryPage";
 import ProductDetail from "../pages/ProductDetail";
 
-function App() {
+function Layout() {
   return (
     <div className="app">
-      <Routes>
+      <Header />
+      <div className="main-content">
+        <Sidebar />
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
         <Route path="/" element={<Homepage />} />
         <Route path="/cartpage" element={<Cartpage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/men" element={<CategoryPage />} />
         <Route path="/women" element={<CategoryPage />} />
         <Route path="/shoes" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
-      </Routes>
-    </div>
+      </Route>
+    </Routes>
   );
 }
 
