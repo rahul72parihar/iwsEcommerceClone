@@ -1,5 +1,5 @@
-// Real API service - Backend http://localhost:5000/api
-const API_BASE = '/api';
+// Production/Dev API base (Render/Netlify vs local)
+const API_BASE = window.API_BASE || '/api';
 
 // Dummy API endpoints
 export const apiService = {
