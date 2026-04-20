@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import "../styles/App.css";
+import HeroCarousel from "../components/HeroCaraousel";
 import ProductSection from "../components/ProductSection";
 
 export default function CategoryPage() {
@@ -8,6 +9,7 @@ export default function CategoryPage() {
 
   return (
     <main className="categoryMain">
+      <HeroCarousel category={activeCategory} />
       <ProductSection title={`Products in ${activeCategory}`} category={activeCategory} />
     </main>
   );
