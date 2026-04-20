@@ -23,6 +23,9 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log('MongoDB error:', err));
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("API running");
+});
 import productRoutes from './routes/products.js';
 app.use('/api/products', productRoutes);
 
