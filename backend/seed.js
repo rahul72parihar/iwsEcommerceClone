@@ -74,13 +74,13 @@ const hardcodedProductsData = [
 const seedDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to DB for seeding');
+    ;
     
     await Product.deleteMany({});
-    console.log('Cleared old products');
+    ;
     
     await Product.insertMany(hardcodedProductsData);
-    console.log('Seeded 60 products!');
+    ;
     
     process.exit(0);
   } catch (error) {

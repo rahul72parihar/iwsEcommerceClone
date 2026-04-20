@@ -5,7 +5,6 @@ const router = express.Router();
 
 // Get all products (trending first)
 router.get("/", async (req, res) => {
-  console.log("IN BANNER ALL BACKEND");
   try {
     const { limit = 8 } = req.query;
     const pageBanners = await PageBanner.find();
@@ -18,7 +17,6 @@ router.get("/", async (req, res) => {
 });
 
 router.get('/:category', async (req, res) => {
-  console.log("IN BANNER CATEGORY BACKEND", req.params.category);
   try {
     const { limit = 4 } = req.query;
     const pageBanner = await PageBanner.findOne({ page: req.params.category.toLowerCase() });

@@ -133,7 +133,6 @@ const seedBanners = async () => {
     await PageBanner.deleteMany();
     await PageBanner.insertMany(seedData);
 
-    console.log("✅ Seeded without loops");
     process.exit();
   } catch (err) {
     console.error(err);

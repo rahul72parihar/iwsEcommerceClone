@@ -19,8 +19,8 @@ app.get('/api/health', (req, res) => {
 
 // DB Connect (update MONGO_URI)
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB error:', err));
+  .then(() => {})
+  .catch(err => {});
 
 // Routes
 app.get("/", (req, res) => {
@@ -32,6 +32,4 @@ app.use('/api/products', productRoutes);
 import bannerRoutes from './routes/banners.js';
 app.use('/api/banners', bannerRoutes)
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => {});
