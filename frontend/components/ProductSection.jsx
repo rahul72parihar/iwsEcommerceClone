@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { apiService } from "../services/api.js";
 
-const MEN_SHIRT_IMAGE = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
 import ProductCard from "./ProductCard";
 import "../styles/ProductSection.css";
 

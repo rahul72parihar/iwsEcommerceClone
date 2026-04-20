@@ -13,7 +13,7 @@ export default function TrendingSection() {
       try {
         setLoading(true);
         const allProducts = await apiService.getAllProducts();
-        const trending = allProducts.data.filter(p => p.trending).slice(0, 8);
+        const trending = allProducts.data.filter(p => p.trending);
         setTrendingProducts(trending);
       } catch (err) {
         console.error('Failed to fetch trending products');
