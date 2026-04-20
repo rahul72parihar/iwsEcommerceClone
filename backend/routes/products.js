@@ -26,7 +26,6 @@ router.get('/trending', async (req, res) => {
 
 // Get products by category
 router.get('/:category', async (req, res) => {
-  console.log("CATEGORY")
   try {
     const products = await Product.find({ category: req.params.category.toUpperCase() });
     res.json(products);
@@ -37,10 +36,8 @@ router.get('/:category', async (req, res) => {
 
 // Get single product by product ID (after categories) - add console.log
 router.get('/id/:id', async (req, res) => {
-  console.log('Product route hit:', req.params.id);
   try {
     const product = await Product.findOne({ id: req.params.id });
-    console.log(product)
     // res.status(200).json(product);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
