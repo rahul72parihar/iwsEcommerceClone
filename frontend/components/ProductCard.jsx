@@ -2,8 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { FiPlus } from 'react-icons/fi';
 import { apiService } from "../services/api.js";
-import { setCartCount } from "../src/store/slices/uiSlice";
+import { setCartCount, addToast } from "../src/store/slices/uiSlice.js";
 import "../styles/ProductCard.css";
+
+
 
 export default function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -11,18 +13,28 @@ export default function ProductCard({ product }) {
 
   const handleAddToCart = async () => {
     if (!token) {
-      alert('Please login to add to cart');
+      dispatch(addToast({
+        type: 'error',
+        message: 'Please login to add to cart'
+      }));
       return;
     }
 
     const result = await apiService.addToCart(product._id || product.id, 1, token);
     if (result.status === 'success') {
       dispatch(setCartCount(result.data.length));
-      alert('Added to cart!');
+      dispatch(addToast({
+        type: 'success',
+        message: 'Item added to cart! 🛒'
+      }));
     } else {
-      alert('Failed to add to cart');
+      dispatch(addToast({
+        type: 'error',
+        message: 'Failed to add to cart'
+      }));
     }
   };
+
 
   return (
     <div className="productCardWrapper">
