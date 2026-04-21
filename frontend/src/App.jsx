@@ -1,6 +1,9 @@
 import "../styles/App.css";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { Routes, Route, Outlet } from "react-router-dom";
+
 
 import Header from "../components/layout/Header/Header";
 import Sidebar from "../components/layout/Sidebar/Sidebar";
@@ -16,6 +19,10 @@ import CategoryPage from "../pages/CategoryPage";
 import ProductDetail from "../pages/ProductDetail";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+
+import { loadUser } from "./store/slices/authSlice";
+import { loadCart } from "./store/slices/uiSlice";
+
 
 
 function Layout() {
@@ -34,6 +41,19 @@ function Layout() {
 
 
 function App() {
+  const dispatch = useDispatch();
+  const authLoading = useSelector(state => state.auth.loading);
+
+  useEffect(() => {
+    dispatch(loadUser());
+    dispatch(loadCart());
+  }, [dispatch]);
+
+
+  if (authLoading) {
+    return <div className="loading">Loading...</div>;
+  }
+
   return (
     <Routes>
       <Route element={<Layout />}>
@@ -52,6 +72,7 @@ function App() {
     </Routes>
   );
 }
+
 
 export default App;
 
