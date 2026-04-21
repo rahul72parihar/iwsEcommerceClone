@@ -16,7 +16,7 @@ export default function TrendingSection() {
         const trending = allProducts.data.filter(p => p.trending);
         setTrendingProducts(trending);
       } catch (err) {
-        console.error('Failed to fetch trending products');
+
       } finally {
         setLoading(false);
       }

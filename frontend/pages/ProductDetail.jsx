@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiService } from '../services/api.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { FiPlus } from 'react-icons/fi';
+import { apiService } from '../services/api';
+import { setCartCount } from '../src/store/slices/uiSlice';
 import '../styles/ProductDetail.css';
 
 export default function ProductDetail() {
@@ -8,6 +11,8 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
   
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,6 +33,21 @@ export default function ProductDetail() {
 
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!token) {
+      alert('Please login to add to cart');
+      return;
+    }
+
+    const result = await apiService.addToCart(id, 1, token);
+    if (result.status === 'success') {
+      dispatch(setCartCount(result.data.length));
+      alert('Added to cart!');
+    } else {
+      alert('Failed to add to cart');
+    }
+  };
 
   if (loading) return <div className="loading">Loading product...</div>;
   if (error || !product) return <div className="error">{error || 'Product not found'}</div>;
@@ -56,7 +76,9 @@ export default function ProductDetail() {
           <p className="productPrice">${product.price}</p>
           <div className="productCategory">Category: {product.category}</div>
           <div className="addToCart">
-            <button className="addButton">Add to Cart</button>
+            <button className="addButton" onClick={handleAddToCart}>
+              <FiPlus /> Add to Cart
+            </button>
           </div>
           <div className="productDescription">
             <h3>Description</h3>
@@ -67,3 +89,4 @@ export default function ProductDetail() {
     </main>
   );
 }
+

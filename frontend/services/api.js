@@ -1,5 +1,6 @@
 // Production/Dev API base (Render/Netlify vs local)
-const API_BASE = window.API_BASE || '/api';
+const API_BASE = window.API_BASE || 'http://localhost:5000/api';
+
 
 // Dummy API endpoints
 export const apiService = {
@@ -20,7 +21,7 @@ export const apiService = {
   },
   getAllBanners: async () => {
     try {
-      console.log("API BANNER ALL TRIGGERED")
+
       const response = await fetch(`${API_BASE}/banners/`);
       const data = await response.json();
       return {
@@ -34,7 +35,7 @@ export const apiService = {
 
   getCategoryBanners: async (category) => {
     try {
-      console.log("API CATEGORY BANNER TRIGGERED", category);
+
       const response = await fetch(`${API_BASE}/banners/${category}`);
       const data = await response.json();
       return {
@@ -61,15 +62,15 @@ export const apiService = {
   getProduct: async (id) => {
     try {
       const response = await fetch(`${API_BASE}/products/id/${id}`);
-      console.log("Response frontend api - > ", response);
+
       const data = await response.json();
-      console.log("PRODUCT FOUND ", data);
+
       return {
         data,
         status: response.ok ? 'success' : 'error'
       };
     } catch (error) {
-      console.log("PRODUCT NOT FOUND")
+
       return { data: null, status: 'error', error: error.message };
     }
   },
@@ -83,7 +84,103 @@ export const apiService = {
         });
       }, 200);
     });
+  },
+
+  register: async (userData) => {
+    try {
+      const response = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      return {
+        data,
+        status: response.ok ? 'success' : 'error'
+      };
+    } catch (error) {
+      return { data: null, status: 'error', error: error.message };
+    }
+  },
+
+  login: async (userData) => {
+    try {
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      return {
+        data,
+        status: response.ok ? 'success' : 'error'
+      };
+    } catch (error) {
+      return { data: null, status: 'error', error: error.message };
+    }
+  },
+
+  // Cart API
+  getCart: async (token) => {
+    try {
+      const response = await fetch(`${API_BASE}/cart`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      return {
+        data,
+        status: response.ok ? 'success' : 'error'
+      };
+    } catch (error) {
+      return { data: [], status: 'error', error: error.message };
+    }
+  },
+
+  addToCart: async (productId, quantity = 1, token) => {
+    try {
+      const response = await fetch(`${API_BASE}/cart/add`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId, quantity }),
+      });
+      const data = await response.json();
+      return {
+        data,
+        status: response.ok ? 'success' : 'error'
+      };
+    } catch (error) {
+      return { data: null, status: 'error', error: error.message };
+    }
+  },
+
+  removeFromCart: async (productId, token) => {
+    try {
+      const response = await fetch(`${API_BASE}/cart/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      return {
+        data,
+        status: response.ok ? 'success' : 'error'
+      };
+    } catch (error) {
+      return { data: null, status: 'error', error: error.message };
+    }
   }
 };
+
+
 
 
