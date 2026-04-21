@@ -3,6 +3,7 @@ import { VscSearch } from "react-icons/vsc";
 import { CiHeart } from "react-icons/ci";
 import { SlHandbag } from "react-icons/sl";
 import Logo from "../../../assets/Logo";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -24,7 +25,10 @@ export default function MobileNavbar() {
         </div>
 
         {/* Logo */}
-        <Logo className="mobileNavLogo" style={{cursor: 'pointer'}} onClick={() => navigate('/')}/>
+        <div className="mobileNavLogoWrapper" onClick={() => navigate('/')}>
+          <Logo className="mobileNavLogo" />
+        </div>
+
         {/* Right Icons */}
         <div className="mobileNavIcons">
           <span className="icon">
