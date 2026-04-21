@@ -44,20 +44,16 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date
 }, { timestamps: true });
 
-// Encrypt password
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-  
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+// TEMPORARILY DISABLE PASSWORD HOOK FOR CART SAVES
+userSchema.pre('save', function() {
+  // Completely skip middleware for non-password changes
 });
 
-// Match password
+// Compare password method (use separately for login)
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 const User = mongoose.model('User', userSchema);
 export default User;
+

@@ -5,6 +5,7 @@ const uiSlice = createSlice({
   initialState: {
     isSidebarOpen: false,
     cartItems: 0,
+    toasts: [],
   },
   reducers: {
     toggleSidebar: (state) => {
@@ -19,9 +20,17 @@ const uiSlice = createSlice({
     setCartCount: (state, action) => {
       state.cartItems = action.payload;
     },
+    addToast: (state, action) => {
+      state.toasts.push(action.payload);
+    },
+    removeToast: (state) => {
+      state.toasts.shift();
+    },
   },
 });
 
-export const { toggleSidebar, openSidebar, closeSidebar, setCartCount } = uiSlice.actions;
+
+export const { toggleSidebar, openSidebar, closeSidebar, setCartCount, addToast, removeToast } = uiSlice.actions;
+
 export default uiSlice.reducer;
 

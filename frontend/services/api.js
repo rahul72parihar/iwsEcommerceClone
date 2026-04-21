@@ -125,6 +125,7 @@ export const apiService = {
   },
 
   // Cart API
+
   getCart: async (token) => {
     try {
       const response = await fetch(`${API_BASE}/cart`, {
@@ -142,9 +143,13 @@ export const apiService = {
     }
   },
 
+
+
   addToCart: async (productId, quantity = 1, token) => {
     try {
-      const response = await fetch(`${API_BASE}/cart/add`, {
+      const url = `${API_BASE}/cart/add`;
+      
+      const response = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +157,9 @@ export const apiService = {
         },
         body: JSON.stringify({ productId, quantity }),
       });
-      const data = await response.json();
+      
+      const fullData = await response.json();
+      const data = fullData.cart || fullData.data || fullData;
       return {
         data,
         status: response.ok ? 'success' : 'error'
@@ -162,6 +169,9 @@ export const apiService = {
     }
   },
 
+
+
+
   removeFromCart: async (productId, token) => {
     try {
       const response = await fetch(`${API_BASE}/cart/${productId}`, {
@@ -170,7 +180,8 @@ export const apiService = {
           'Authorization': `Bearer ${token}`,
         },
       });
-      const data = await response.json();
+      const fullData = await response.json();
+      const data = fullData.cart || fullData.data || fullData;
       return {
         data,
         status: response.ok ? 'success' : 'error'
@@ -179,6 +190,7 @@ export const apiService = {
       return { data: null, status: 'error', error: error.message };
     }
   }
+
 };
 
 
