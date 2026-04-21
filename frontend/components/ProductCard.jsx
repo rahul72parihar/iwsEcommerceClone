@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { Link } from "react-router-dom";
 import { FiPlus } from 'react-icons/fi';
 import { apiService } from "../services/api.js";
@@ -10,6 +12,7 @@ import "../styles/ProductCard.css";
 export default function ProductCard({ product }) {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToCart = async () => {
     if (!token) {
@@ -19,21 +22,33 @@ export default function ProductCard({ product }) {
       }));
       return;
     }
+    if (isLoading) return;
 
-    const result = await apiService.addToCart(product._id || product.id, 1, token);
-    if (result.status === 'success') {
-      dispatch(setCartCount(result.data.length));
-      dispatch(addToast({
-        type: 'success',
-        message: 'Item added to cart! 🛒'
-      }));
-    } else {
+    setIsLoading(true);
+    try {
+      const result = await apiService.addToCart(product._id || product.id, 1, token);
+      if (result.status === 'success') {
+        dispatch(setCartCount(result.data.length));
+        dispatch(addToast({
+          type: 'success',
+          message: 'Item added to cart! 🛒'
+        }));
+      } else {
+        dispatch(addToast({
+          type: 'error',
+          message: 'Failed to add to cart'
+        }));
+      }
+    } catch (error) {
       dispatch(addToast({
         type: 'error',
-        message: 'Failed to add to cart'
+        message: 'Network error. Try again.'
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
 
   return (
@@ -48,10 +63,21 @@ export default function ProductCard({ product }) {
           <p className="productPrice">${product.price}</p>
         </div>
       </Link>
-      <button className="addToCartBtn" onClick={handleAddToCart}>
-        <FiPlus />
-        Add to Cart
+      <button 
+        className="addToCartBtn" 
+        onClick={handleAddToCart}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <span>⏳</span>
+        ) : (
+          <>
+            <FiPlus />
+            Add to Cart
+          </>
+        )}
       </button>
+
 
       </div>
     </div>

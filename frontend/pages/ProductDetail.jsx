@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 import { apiService } from '../services/api';
-import { setCartCount } from '../src/store/slices/uiSlice';
+import { setCartCount, addToast } from '../src/store/slices/uiSlice';
 import '../styles/ProductDetail.css';
+
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -36,18 +37,23 @@ export default function ProductDetail() {
 
   const handleAddToCart = async () => {
     if (!token) {
-      alert('Please login to add to cart');
+      dispatch(addToast({ type: 'error', message: 'Please login to add to cart' }));
       return;
     }
 
-    const result = await apiService.addToCart(id, 1, token);
-    if (result.status === 'success') {
-      dispatch(setCartCount(result.data.length));
-      alert('Added to cart!');
-    } else {
-      alert('Failed to add to cart');
+    try {
+      const result = await apiService.addToCart(id, 1, token);
+      if (result.status === 'success') {
+        dispatch(setCartCount(result.data.length));
+        dispatch(addToast({ type: 'success', message: 'Added to cart!' }));
+      } else {
+        dispatch(addToast({ type: 'error', message: 'Failed to add to cart' }));
+      }
+    } catch (error) {
+      dispatch(addToast({ type: 'error', message: 'Network error' }));
     }
   };
+
 
   if (loading) return <div className="loading">Loading product...</div>;
   if (error || !product) return <div className="error">{error || 'Product not found'}</div>;

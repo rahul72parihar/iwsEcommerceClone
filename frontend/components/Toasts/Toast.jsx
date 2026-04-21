@@ -9,14 +9,15 @@ const Toast = () => {
   const toasts = useSelector(state => state.ui.toasts || []);
 
   useEffect(() => {
+    if (toasts.length === 0) return;
+    
     const timer = setTimeout(() => {
-      if (toasts.length > 0) {
-        dispatch(removeToast());
-      }
-    }, 3000);
+      dispatch(removeToast());
+    }, 2200);
 
     return () => clearTimeout(timer);
-  }, [toasts, dispatch]);
+  }, [toasts.length, dispatch]);  // Only on length change
+
 
   if (toasts.length === 0) return null;
 

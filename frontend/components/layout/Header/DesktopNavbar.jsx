@@ -5,13 +5,18 @@ import { FiSearch, FiUser, FiHeart, FiShoppingCart } from "react-icons/fi";
 import { BsMic } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { toggleSidebar } from "../../../src/store/slices/uiSlice";
+
+
 
 export default function DesktopNavbar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.ui.cartItems);
   const categories = ["MEN", "WOMEN", "SHOES"];
+
   const handleSearch = () => {
     if (!query.trim()) return;
     // later you will:
@@ -77,8 +82,31 @@ export default function DesktopNavbar() {
           <div className="navIcons">
             <FiUser onClick={() => navigate('/profile')} style={{cursor: 'pointer'}} />
             <FiHeart onClick={() => navigate('/wishlist')} style={{cursor: 'pointer'}} />
-            <FiShoppingCart onClick={() => navigate('/cartpage')} style={{cursor: 'pointer'}} />
+            <div className="cartIconWrapper" style={{position: 'relative', display: 'inline-block'}}>
+              <FiShoppingCart onClick={() => navigate('/cartpage')} style={{cursor: 'pointer'}} />
+              {cartItems > 0 && (
+                <span className="cartBadge" style={{
+                  position: 'absolute',
+                  top: -8,
+                  right: -8,
+                  background: '#ff4444',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: 20,
+                  height: 20,
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: 20
+                }}>
+                  {cartItems}
+                </span>
+              )}
+            </div>
           </div>
+
 
         </div>
       </div>
