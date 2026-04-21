@@ -12,6 +12,8 @@ import WishlistPage from "../pages/WishlistPage";
 import ProfilePage from "../pages/ProfilePage";
 import CategoryPage from "../pages/CategoryPage";
 import ProductDetail from "../pages/ProductDetail";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 function Layout() {
   return (
@@ -38,6 +40,8 @@ function App() {
         <Route path="/women" element={<CategoryPage />} />
         <Route path="/shoes" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Route>
     </Routes>
   );

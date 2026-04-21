@@ -26,10 +26,20 @@ mongoose.connect(process.env.MONGO_URI)
 app.get("/", (req, res) => {
   res.send("API running");
 });
+
 import productRoutes from './routes/products.js';
 app.use('/api/products', productRoutes);
 
 import bannerRoutes from './routes/banners.js';
-app.use('/api/banners', bannerRoutes)
+app.use('/api/banners', bannerRoutes);
+
+import authRoutes from './routes/auth.js';
+app.use('/api/auth', authRoutes);
+
+import cartRoutes from './routes/cart.js';
+app.use('/api/cart', cartRoutes);
+
 // Start server
-app.listen(PORT, () => {});
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

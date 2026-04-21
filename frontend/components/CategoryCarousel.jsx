@@ -55,7 +55,7 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
       <div className="categoryCarouselsContainer">
         {CATEGORIES.map(category => {
           const products = categorySections[category] || [];
-          console.log(`${category} products count:`, products.length);
+
 
           if (products.length === 0) {
             return (

@@ -13,10 +13,10 @@ export default function HeroCarousel({ category = null }) {
         const response = category 
           ? await apiService.getCategoryBanners(category)
           : await apiService.getAllBanners();
-        console.log("BANNERS", response.data);
+
         setBanners(response?.data || []);
       } catch (err) {
-        console.log("Banner error", err);
+
         setBanners([]);
       } finally {
         setIsLoading(false);

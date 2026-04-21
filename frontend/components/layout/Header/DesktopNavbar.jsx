@@ -15,7 +15,7 @@ export default function DesktopNavbar() {
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    console.log("Searching for:", query);
+
 
     // later you will:
     // navigate(`/search?q=${query}`)

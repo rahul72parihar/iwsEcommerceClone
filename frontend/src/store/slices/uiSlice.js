@@ -4,6 +4,7 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState: {
     isSidebarOpen: false,
+    cartItems: 0,
   },
   reducers: {
     toggleSidebar: (state) => {
@@ -15,9 +16,12 @@ const uiSlice = createSlice({
     closeSidebar: (state) => {
       state.isSidebarOpen = false;
     },
+    setCartCount: (state, action) => {
+      state.cartItems = action.payload;
+    },
   },
 });
 
-export const { toggleSidebar, openSidebar, closeSidebar } = uiSlice.actions;
+export const { toggleSidebar, openSidebar, closeSidebar, setCartCount } = uiSlice.actions;
 export default uiSlice.reducer;
 
