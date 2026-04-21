@@ -2,7 +2,8 @@ import "../styles/App.css";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
+
 
 
 import Header from "../components/layout/Header/Header";
@@ -26,6 +27,12 @@ import { loadCart } from "./store/slices/uiSlice";
 
 
 function Layout() {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
+
   return (
     <div className="app">
       <Header />
@@ -38,6 +45,7 @@ function Layout() {
     </div>
   );
 }
+
 
 
 function App() {
