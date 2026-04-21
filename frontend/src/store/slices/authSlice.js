@@ -1,53 +1,48 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loadUser = createAsyncThunk(
-  'auth/loadUser',
+  "auth/loadUser",
   async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token');
-    if (!token) throw rejectWithValue('No token');
-
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token");
 
     try {
-    const API_BASE = window.API_BASE || 'http://localhost:5000/api';
-    const response = await fetch(`${API_BASE}/auth/me`, {
-
-
+      const API_BASE = window.API_BASE || "http://localhost:5000/api";
+      const response = await fetch(`${API_BASE}/auth/me`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        localStorage.removeItem('token');
-        return rejectWithValue('Invalid token');
+        localStorage.removeItem("token");
+        return rejectWithValue("Invalid token");
       }
 
       const data = await response.json();
       return data.user || data;
-
     } catch (error) {
-      localStorage.removeItem('token');
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token') || null,
-  isAuthenticated: false,
+  token: localStorage.getItem("token") || null,
+  isAuthenticated: !!localStorage.getItem("token"),
   loading: true,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
-      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem("token", action.payload.token);
       state.loading = false;
     },
     logout: (state) => {
@@ -55,7 +50,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.loading = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     },
 
     setLoading: (state) => {
@@ -70,6 +65,7 @@ const authSlice = createSlice({
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.token = localStorage.getItem("token"); // ✅ keep in sync
         state.loading = false;
       })
       .addCase(loadUser.rejected, (state) => {
@@ -82,4 +78,3 @@ const authSlice = createSlice({
 
 export const { loginSuccess, logout, setLoading } = authSlice.actions;
 export default authSlice.reducer;
-
