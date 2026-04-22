@@ -17,7 +17,7 @@ const loadCart = createAsyncThunk(
         },
       });
 
-      if (!response.ok) throw rejectWithValue('Failed to load cart');
+      if (!response.ok) return rejectWithValue('Failed to load cart');
 
       const data = await response.json();
       const count = data.cart?.length || data.length || 0;
