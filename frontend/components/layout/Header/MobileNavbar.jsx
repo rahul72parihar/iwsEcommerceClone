@@ -34,9 +34,6 @@ export default function MobileNavbar() {
           <span className="icon">
             <VscSearch />
           </span>
-          <span className="icon" onClick={() => navigate('/wishlist')}>
-            <CiHeart />
-          </span>
           <span className="icon cartIconMobile" style={{position: 'relative'}} onClick={() => navigate('/cartpage')}>
             <SlHandbag />
             {cartItems > 0 && (
