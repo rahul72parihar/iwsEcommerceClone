@@ -1,37 +1,40 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../src/store/slices/authSlice';
-import { apiService } from '../services/api.js';
-import '../styles/LoginPage.css'; // Reuse same styling
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../src/store/slices/authSlice";
+import { loadCart } from "../src/store/slices/uiSlice";
+import { apiService } from "../services/api.js";
+import "../styles/LoginPage.css";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const dispatch = useDispatch();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+
     setIsLoading(true);
-    setError('');
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setIsLoading(false);
       return;
     }
@@ -39,24 +42,30 @@ export default function RegisterPage() {
     const { data, status } = await apiService.register({
       name: formData.name,
       email: formData.email,
-      password: formData.password
+      password: formData.password,
     });
 
-    if (status === 'success') {
-      // Auto-login after register
+    if (status === "success") {
       const loginData = await apiService.login({
         email: formData.email,
-        password: formData.password
+        password: formData.password,
       });
 
-      if (loginData.status === 'success') {
-        dispatch(loginSuccess(loginData.data));
-        navigate('/');
+      if (loginData.status === "success") {
+        dispatch(
+          loginSuccess({
+            user: loginData.data.user || loginData.data,
+            token: loginData.data.token,
+          })
+        );
+
+        dispatch(loadCart()); // 🔥 critical fix
+        navigate("/");
       } else {
-        setError(loginData.data.message || 'Login failed after register');
+        setError(loginData.data?.message || "Login failed after register");
       }
     } else {
-      setError(data.message || 'Registration failed');
+      setError(data?.message || "Registration failed");
     }
 
     setIsLoading(false);
@@ -72,73 +81,31 @@ export default function RegisterPage() {
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                required
-                disabled={isLoading}
-              />
-            </div>
+            {["name", "email", "password", "confirmPassword"].map((field) => (
+              <div className="form-group" key={field}>
+                <label>{field}</label>
+                <input
+                  type={field.includes("password") ? "password" : "text"}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+            ))}
 
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <button type="submit" className="login-button" disabled={isLoading}>
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+            <button className="login-button" disabled={isLoading}>
+              {isLoading ? "Creating..." : "Create Account"}
             </button>
           </form>
 
-          <div className="login-footer">
-            <p>Already have an account? <Link to="/login" className="link">Sign in</Link></p>
-          </div>
+          <p>
+            Already have an account?{" "}
+            <Link to="/login">Sign in</Link>
+          </p>
         </div>
       </div>
     </div>
   );
 }
-

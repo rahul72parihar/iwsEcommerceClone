@@ -1,0 +1,159 @@
+.searchMain {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.searchHero {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  position: relative;
+}
+
+.searchInputResults {
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 2px;
+  backdrop-filter: blur(10px);
+}
+
+.searchInputResultsField {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 1rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.searchInputResultsField::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.searchButtonResults {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.2s;
+}
+
+.searchButtonResults:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.searchTitle {
+  font-size: 3rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.searchQuery {
+  font-size: 1.5rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.searchEmpty, .noResults {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.mobileSearchInput {
+  display: flex;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  flex-wrap: wrap;
+}
+
+.searchInputMobile {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  min-width: 250px;
+}
+
+.searchButtonMobile {
+  padding: 1rem 2rem;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.searchButtonMobile:hover {
+  background: #3730a3;
+}
+
+@media (max-width: 768px) {
+  .mobileSearchInput {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .searchInputMobile {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+.searchEmpty h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.searchResultsHeader {
+  margin: 2rem 0 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.searchResultsHeader h2 {
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.searchProductsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .searchMain {
+    padding: 1rem 0.5rem;
+  }
+  
+  .searchProductsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+}

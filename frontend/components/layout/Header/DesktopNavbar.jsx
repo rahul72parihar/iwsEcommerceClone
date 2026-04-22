@@ -16,9 +16,10 @@ export default function DesktopNavbar() {
   const categories = ["MEN", "WOMEN", "SHOES"];
 
   const handleSearch = () => {
-    if (!query.trim()) return;
-    // later you will:
-    // navigate(`/search?q=${query}`)
+    const q = query.trim();
+    if (!q) return;
+    navigate(`/search?q=${q}`);
+    setQuery('');
   };
 
   const handleKeyDown = (e) => {
