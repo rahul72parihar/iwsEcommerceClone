@@ -19,29 +19,15 @@ const generateToken = (id) => {
 ========================= */
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
 
-    // 🔥 Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
+    email = email?.toLowerCase();
 
-    // 🔥 Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // 🔥 Create user (password hashing happens in model)
     const user = await User.create({
       name,
       email,
       password,
     });
-
-    if (!user) {
-      return res.status(400).json({ message: 'Registration failed' });
-    }
 
     res.status(201).json({
       success: true,
@@ -55,7 +41,28 @@ router.post('/register', async (req, res) => {
 
   } catch (error) {
     console.error('REGISTER ERROR:', error);
-    res.status(500).json({ message: 'Server error' });
+
+    // 🔥 1. Mongoose validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+
+      return res.status(400).json({
+        message: messages[0], // first error
+        errors: messages      // all errors (optional)
+      });
+    }
+
+    // 🔥 2. Duplicate email
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: 'Email already registered'
+      });
+    }
+
+    // 🔥 3. Fallback
+    res.status(500).json({
+      message: 'Server error'
+    });
   }
 });
 
