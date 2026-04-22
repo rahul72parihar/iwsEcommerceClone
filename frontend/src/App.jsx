@@ -20,6 +20,7 @@ import CategoryPage from "../pages/CategoryPage";
 import ProductDetail from "../pages/ProductDetail";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import SearchPage from "../pages/SearchPage";
 
 import { loadUser } from "./store/slices/authSlice";
 import { loadCart } from "./store/slices/uiSlice";
@@ -72,6 +73,7 @@ useEffect(() => {
       <Route element={<Layout />}>
         <Route path="/" element={<Homepage />} />
         <Route path="/cartpage" element={<Cartpage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
 
         <Route path="/profile" element={<ProfilePage />} />

@@ -1,1 +1,1 @@
-window.API_BASE = window.location.hostname === 'localhost' ? '/api' : 'https://iwsecommerceclone.onrender.com/api';
+window.API_BASE = 'http://localhost:5000/api';

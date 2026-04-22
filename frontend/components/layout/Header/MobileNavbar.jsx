@@ -31,7 +31,7 @@ export default function MobileNavbar() {
 
         {/* Right Icons */}
         <div className="mobileNavIcons">
-          <span className="icon">
+          <span className="icon" onClick={() => navigate('/search')}>
             <VscSearch />
           </span>
           <span className="icon cartIconMobile" style={{position: 'relative'}} onClick={() => navigate('/cartpage')}>
