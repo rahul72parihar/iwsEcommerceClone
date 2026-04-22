@@ -8,8 +8,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { toggleSidebar } from "../../../src/store/slices/uiSlice";
 
-
-
 export default function DesktopNavbar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -32,34 +30,39 @@ export default function DesktopNavbar() {
   return (
     <div className="desktopNav">
       <div className="desktopNavContainer">
-
         {/* Left */}
         <div className="desktopNavLeft">
-          <span className="sidebarButtonIcon" onClick={() => dispatch(toggleSidebar())}>
+          <span
+            className="sidebarButtonIcon"
+            onClick={() => dispatch(toggleSidebar())}
+          >
             <HiOutlineBars3 />
           </span>
           <div className="desktopCategories">
-    {categories.map((cat) => (
-      <span 
-        key={cat} 
-        className="categoryItem"
-        onClick={() => navigate(`/${cat.toLowerCase()}`)}
-        style={{cursor: 'pointer'}}
-      >
-        {cat}
-      </span>
-    ))}
-  </div>
+            {categories.map((cat) => (
+              <span
+                key={cat}
+                className="categoryItem"
+                onClick={() => navigate(`/${cat.toLowerCase()}`)}
+                style={{ cursor: "pointer" }}
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Center Logo (wrap it!) */}
-        <div className="desktopNavCenter" style={{cursor: 'pointer'}} onClick={() => navigate('/')}>
+        <div
+          className="desktopNavCenter"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
           <Logo className="desktopLogo" />
         </div>
 
         {/* Right Side */}
         <div className="desktopNavRight">
-
           {/* Search Bar */}
           <div className="searchBar">
             <input
@@ -80,34 +83,42 @@ export default function DesktopNavbar() {
 
           {/* Action Icons */}
           <div className="navIcons">
-            <FiUser onClick={() => navigate('/profile')} style={{cursor: 'pointer'}} />
-            <FiHeart onClick={() => navigate('/wishlist')} style={{cursor: 'pointer'}} />
-            <div className="cartIconWrapper" style={{position: 'relative', display: 'inline-block'}}>
-              <FiShoppingCart onClick={() => navigate('/cartpage')} style={{cursor: 'pointer'}} />
+            <FiUser
+              onClick={() => navigate("/profile")}
+              style={{ cursor: "pointer" }}
+            />
+            <div
+              className="cartIconWrapper"
+              onClick={() => navigate("/cartpage")}
+              style={{ cursor: "pointer" }}
+              style={{ position: "relative", display: "inline-block" }}
+            >
+              <FiShoppingCart />
               {cartItems > 0 && (
-                <span className="cartBadge" style={{
-                  position: 'absolute',
-                  top: -8,
-                  right: -8,
-                  background: '#ff4444',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: 20,
-                  height: 20,
-                  fontSize: 12,
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minWidth: 20
-                }}>
+                <span
+                  className="cartBadge"
+                  style={{
+                    position: "absolute",
+                    top: -8,
+                    right: -8,
+                    background: "#ff4444",
+                    color: "white",
+                    borderRadius: "50%",
+                    width: 20,
+                    height: 20,
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: 20,
+                  }}
+                >
                   {cartItems}
                 </span>
               )}
             </div>
           </div>
-
-
         </div>
       </div>
     </div>

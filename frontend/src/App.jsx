@@ -14,7 +14,7 @@ import Toast from "../components/Toasts/Toast";
 import Homepage from "../pages/Homepage";
 import Cartpage from "../pages/Cartpage";
 import CheckoutPage from "../pages/CheckoutPage";
-import WishlistPage from "../pages/WishlistPage";
+
 import ProfilePage from "../pages/ProfilePage";
 import CategoryPage from "../pages/CategoryPage";
 import ProductDetail from "../pages/ProductDetail";
@@ -52,9 +52,14 @@ function App() {
   const dispatch = useDispatch();
   const authLoading = useSelector(state => state.auth.loading);
 
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
+useEffect(() => {
+  dispatch(loadCart());
+}, [isAuthenticated, dispatch]);
+
   useEffect(() => {
     dispatch(loadUser());
-    dispatch(loadCart());
   }, [dispatch]);
 
 
@@ -68,7 +73,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/cartpage" element={<Cartpage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/wishlist" element={<WishlistPage />} />
+
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/men" element={<CategoryPage />} />
         <Route path="/women" element={<CategoryPage />} />
