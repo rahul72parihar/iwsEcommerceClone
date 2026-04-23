@@ -42,7 +42,8 @@ export default function SearchPage() {
       const lowerQuery = searchQuery.toLowerCase().trim();
       const filtered = mockProducts.filter(product =>
         product.name.toLowerCase().includes(lowerQuery) ||
-        product.category.toLowerCase().includes(lowerQuery)
+        product.category.toLowerCase().includes(lowerQuery) ||
+        product.description.toLowerCase().includes(lowerQuery)
       );
       setAllProducts(mockProducts);
       setFilteredProducts(filtered);

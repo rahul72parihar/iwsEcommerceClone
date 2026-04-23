@@ -34,7 +34,7 @@ export const apiService = {
     fetchJSON(`${API_BASE}/products?category=${category}&limit=${limit}`),
 
   getProduct: (id) =>
-    fetchJSON(`${API_BASE}/products/${id}`), // ✅ fixed URL
+    fetchJSON(`${API_BASE}/products/id/${id}`), // ✅ fixed URL
 
   getAllBanners: () => fetchJSON(`${API_BASE}/banners`),
 

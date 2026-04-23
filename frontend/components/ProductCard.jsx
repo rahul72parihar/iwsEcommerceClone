@@ -59,8 +59,10 @@ export default function ProductCard({ product }) {
           <img src={product.image} alt={product.title} loading="lazy" />
         </div>
         <div className="productInfo">
-          <h3 className="productTitle">{product.title}</h3>
-          <p className="productPrice">${product.price}</p>
+          <div className="productInfoContent">
+            <h6 className="productTitle">{product.title}</h6>
+            <p className="productPrice">${product.price}</p>
+          </div>
         </div>
       </Link>
       <button 
