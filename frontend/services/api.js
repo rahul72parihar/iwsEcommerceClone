@@ -103,7 +103,7 @@ export const apiService = {
     }),
 
   adminCreateProduct: (data) =>
-    fetchJSON(`${API_BASE}/admin/products`, {
+    fetchJSON(`${API_BASE}/admin/addProduct`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

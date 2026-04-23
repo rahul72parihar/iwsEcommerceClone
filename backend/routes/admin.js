@@ -53,9 +53,10 @@ router.put('/products/:id', auth, requireAdmin, async (req, res) => {
 });
 
 // @desc Create new product
-router.post('/products', auth, requireAdmin, async (req, res) => {
+router.post('/addProduct', auth, requireAdmin, async (req, res) => {
   try {
     const product = new Product(req.body);
+    console.log(product);
     await product.save();
     res.status(201).json({ status: 'success', data: product });
   } catch (error) {
