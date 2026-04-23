@@ -57,11 +57,11 @@ function App() {
 
 useEffect(() => {
   dispatch(loadCart());
-}, [isAuthenticated, dispatch]);
+}, [isAuthenticated]);
 
   useEffect(() => {
     dispatch(loadUser());
-  }, [dispatch]);
+  }, []);
 
 
   if (authLoading) {

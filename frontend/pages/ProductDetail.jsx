@@ -9,6 +9,7 @@ import '../styles/ProductDetail.css';
 
 export default function ProductDetail() {
   const { id } = useParams();
+  console.log("ID -> ",id);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,6 +23,7 @@ export default function ProductDetail() {
         const response = await apiService.getProduct(id);
         if (response.status === 'success') {
           setProduct(response.data);
+          console.log(response.data);
         } else {
           setError('Product not found');
         }
@@ -42,7 +44,7 @@ export default function ProductDetail() {
     }
 
     try {
-      const result = await apiService.addToCart(id, 1, token);
+      const result = await apiService.addToCart(id, 1);
       if (result.status === 'success') {
         dispatch(setCartCount(result.data.length));
         dispatch(addToast({ type: 'success', message: 'Added to cart!' }));
@@ -79,7 +81,7 @@ export default function ProductDetail() {
         </div>
         <div className="productInfo">
           <h1 className="productTitle">{product.title}</h1>
-          <p className="productPrice">${product.price}</p>
+          <p className="productPrice">${Number(product.price).toFixed(2)}</p>
           <div className="productCategory">Category: {product.category}</div>
           <div className="addToCart">
             <button className="addButton" onClick={handleAddToCart}>
@@ -88,7 +90,7 @@ export default function ProductDetail() {
           </div>
           <div className="productDescription">
             <h3>Description</h3>
-            <p>High quality product with premium materials. Perfect fit and comfort. Available in multiple sizes and colors.</p>
+            <p>{product.description}</p>
           </div>
         </div>
       </div>
