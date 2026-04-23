@@ -21,6 +21,7 @@ import ProductDetail from "../pages/ProductDetail";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import SearchPage from "../pages/SearchPage";
+import AdminPage from "../pages/AdminPage";
 
 import { loadUser } from "./store/slices/authSlice";
 import { loadCart } from "./store/slices/uiSlice";
@@ -83,6 +84,7 @@ useEffect(() => {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Route>
     </Routes>
   );

@@ -13,13 +13,13 @@ export const loadUser = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!response.ok) {
         localStorage.removeItem("token");
         return rejectWithValue("Invalid token");
       }
 
       const data = await response.json();
+      console.log(data.user)
       return data.user || data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -31,6 +31,7 @@ const initialState = {
   user: null,
   token: localStorage.getItem("token") || null,
   isAuthenticated: !!localStorage.getItem("token"),
+  isAdmin: false,
   loading: true,
 };
 
@@ -42,6 +43,8 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      console.log(`action.payload.user.role === 'admin' -> `, action.payload.user);
+      state.isAdmin = action.payload.user.role === 'admin';
       localStorage.setItem("token", action.payload.token);
       state.loading = false;
     },
@@ -65,6 +68,8 @@ const authSlice = createSlice({
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthenticated = true;
+        console.log(`action.payload.user.role === 'admin' second-> `, action.payload);
+        state.isAdmin = action.payload.role === 'admin';
         state.token = localStorage.getItem("token"); // ✅ keep in sync
         state.loading = false;
       })

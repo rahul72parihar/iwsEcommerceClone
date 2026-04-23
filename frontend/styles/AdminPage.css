@@ -1,0 +1,171 @@
+.admin-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.admin-page h1 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 2rem;
+  color: #1a1a1a;
+}
+
+.admin-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.admin-section h2 {
+  margin-bottom: 1rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.admin-form input, .admin-form select, .admin-form textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.admin-form button {
+  grid-column: 1 / -1;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.admin-form button:hover {
+  transform: translateY(-1px);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.admin-table th {
+  background: #f1f3f4;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table tr:hover {
+  background: #f8f9ff;
+}
+
+.admin-table img {
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.action-icon {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+.action-icon:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+button[onClick*="toggle"] {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+button[onClick*="toggle"]:hover {
+  background: #f0f8ff;
+}
+
+button[onClick*="save"], button[onClick*="cancel"] {
+  padding: 0.4rem 1rem;
+  margin: 0 0.25rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+button[onClick*="save"] {
+  background: #28a745;
+  color: white;
+}
+
+button[onClick*="cancel"] {
+  background: #6c757d;
+  color: white;
+}
+
+.admin-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 1rem;
+  }
+  
+  .admin-table {
+    font-size: 0.85rem;
+  }
+  
+  .admin-table th, .admin-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .admin-table img {
+    width: 40px;
+  }
+}
+
