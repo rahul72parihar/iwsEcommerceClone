@@ -25,6 +25,15 @@ const AdminPage = () => {
     description: "",
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product._id.slice(-6).includes(searchTerm) ||
+    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   useEffect(() => {
     if (!token || !isAdmin) {
       dispatch(
@@ -202,123 +211,120 @@ const AdminPage = () => {
 
       {/* PRODUCTS TABLE - RESPONSIVE */}
       <div className="admin-section">
-        <h2>Products ({products.length})</h2>
-        <div className="table-wrapper">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Trending</th>
-                <th>Description</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td data-label="ID:">{product._id.slice(-6)}</td>
-                  <td data-label="Image:">
-                    <img src={product.image} alt="" width="50" />
-                  </td>
-                  <td data-label="Title:">
-                    {editingId === product._id ? (
-                      <input
-                        value={editForm.title}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, title: e.target.value })
-                        }
-                      />
-                    ) : (
-                      product.title
-                    )}
-                  </td>
-                  <td data-label="Price:">
-                    {editingId === product._id ? (
-                      <input
-                        value={editForm.price}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, price: e.target.value })
-                        }
-                      />
-                    ) : (
-                      `$${product.price}`
-                    )}
-                  </td>
-                  <td data-label="Category:">
-                    {editingId === product._id ? (
-                      <select
-                        value={editForm.category}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, category: e.target.value })
-                        }
-                      >
-                        <option value="MEN">MEN</option>
-                        <option value="WOMEN">WOMEN</option>
-                        <option value="SHOES">SHOES</option>
-                      </select>
-                    ) : (
-                      product.category
-                    )}
-                  </td>
-                  <td data-label="Trending:">
-                    <button
-                      style={{
-                        backgroundColor: product.trending ? "gold" : "white",
-                        color: "black",
-                        padding: "10px 20px",
-                        borderRadius: "5px",
-                        border: "1px solid black",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => toggleTrending(product._id)}
-                    >
-                      <FiStar /> {product.trending ? "Yes" : "No"}
-                    </button>
-                  </td>
-                  <td data-label="Description:">
-                    {editingId === product._id ? (
-                      <textarea 
-                        value={editForm.description} 
-                        onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                        rows="3"
-                        style={{ width: '100%', resize: 'vertical', borderRadius: '8px', padding: '0.5rem', border: '1px solid #ddd' }}
-                      />
-                    ) : (
-                      product.description.slice(0, 50) + '...'
-                    )}
-                  </td>
-                  <td data-label="Actions:">
-                    {editingId === product._id ? (
-                      <>
-                        <button onClick={() => saveEdit(product._id)}>
-                          Save
-                        </button>
-                        <button onClick={cancelEdit}>Cancel</button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => startEdit(product)}
-                        className="action-icon"
-                      >
-                        <FiEdit3 color="white" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => deleteProduct(product._id)}
-                      className="action-icon"
-                    >
-                      <FiTrash2 color="white" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <h2>Products ({filteredProducts.length}) - {products.length} total</h2>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="🔍 Search products by title, category, or ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
         </div>
+        <div className="admin-products">
+              {filteredProducts.map((product) => (
+                <div key={product._id} className="product-card">
+                  <div className="card-row">
+                    <span className="card-label">ID:</span>
+                    <span className="card-value">{product._id.slice(-6)}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Image:</span>
+                    <img src={product.image} alt="" className="card-image" />
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Title:</span>
+                    <span className="card-value">
+                      {editingId === product._id ? (
+                        <input
+                          value={editForm.title}
+                          onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                        />
+                      ) : (
+                        product.title
+                      )}
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Price:</span>
+                    <span className="card-value">
+                      {editingId === product._id ? (
+                        <input
+                          value={editForm.price}
+                          onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
+                        />
+                      ) : (
+                        `$${product.price}`
+                      )}
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Category:</span>
+                    <span className="card-value">
+                      {editingId === product._id ? (
+                        <select
+                          value={editForm.category}
+                          onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                        >
+                          <option value="MEN">MEN</option>
+                          <option value="WOMEN">WOMEN</option>
+                          <option value="SHOES">SHOES</option>
+                        </select>
+                      ) : (
+                        product.category
+                      )}
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Trending:</span>
+                    <span className="card-value">
+                      <button className="trending-toggle" onClick={() => toggleTrending(product._id)}>
+                        <FiStar /> {product.trending ? 'Yes' : 'No'}
+                      </button>
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Description:</span>
+                    <span className="card-value">
+                      {editingId === product._id ? (
+                        <textarea 
+                          value={editForm.description} 
+                          onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                          rows="3"
+                          style={{ width: '100%', resize: 'vertical' }}
+                        />
+                      ) : (
+                        product.description.slice(0, 50) + '...'
+                      )}
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Actions:</span>
+                    <div className="action-buttons">
+                      {editingId === product._id ? (
+                        <>
+                          <button className="save-btn" onClick={() => saveEdit(product._id)}>
+                            Save
+                          </button>
+                          <button className="cancel-btn" onClick={cancelEdit}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button className="edit-btn" onClick={() => startEdit(product)}>
+                            <FiEdit3 /> Edit
+                          </button>
+                          <button className="delete-btn" onClick={() => deleteProduct(product._id)}>
+                            <FiTrash2 /> Delete
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
       </div>
     </div>
   );

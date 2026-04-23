@@ -1,11 +1,11 @@
 /* ========================================
-   ADMIN PAGE - FULLY RESPONSIVE CSS
-   Structure: Desktop → Tablet → Mobile 
+   ADMIN PAGE - VERTICAL CARD LAYOUT EVERYWHERE
+   Single column cards for desktop/tablet/mobile
    ======================================= */
 
-/* BASE STYLES - Page container & typography */
+/* BASE STYLES */
 .admin-page {
-  max-width: 1400px;
+  max-width: 800px; /* Narrower for cards */
   margin: 0 auto;
   padding: 1.5rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -24,37 +24,51 @@
   background-clip: text;
 }
 
-/* SECTION CARDS - Shadowed containers */
+/* SECTION CONTAINERS */
 .admin-section {
   background: white;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
-.admin-section h2 {
+.search-container {
   margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
-/* NEW PRODUCT FORM - Grid responsive */
+.search-input {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 50px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102,126,234,0.15), 0 8px 25px rgba(102,126,234,0.2);
+  transform: translateY(-1px);
+}
+
+.search-input::placeholder {
+  color: #888;
+  font-weight: 400;
+}
+
+/* NEW PRODUCT FORM - Vertical stack */
 .admin-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-  margin-bottom: 1rem;
 }
 
-.admin-form input, 
-.admin-form select, 
-.admin-form textarea {
+.admin-form input, .admin-form select, .admin-form textarea {
   padding: 1rem;
   border: 2px solid #e1e5e9;
   border-radius: 12px;
@@ -63,9 +77,7 @@
   background: #fafbfc;
 }
 
-.admin-form input:focus, 
-.admin-form select:focus, 
-.admin-form textarea:focus {
+.admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
@@ -74,14 +86,12 @@
 }
 
 .admin-form textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
-  grid-column: 1 / -1;
 }
 
 .admin-form button {
-  grid-column: 1 / -1;
-  padding: 1rem 2.5rem;
+  padding: 1.2rem 3rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -90,123 +100,152 @@
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+  box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
 .admin-form button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+  box-shadow: 0 12px 30px rgba(102,126,234,0.4);
 }
 
-/* PRODUCTS TABLE - Responsive design */
-.admin-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+/* PRODUCT CARDS - Vertical layout EVERYWHERE */
+.admin-products {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.product-card {
   background: white;
-  border-radius: 16px;
-  overflow: hidden;
+  border-radius: 20px;
+  padding: 2rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
 }
 
-.admin-table th {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.5rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-.admin-table td {
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid #f0f0f0;
+.card-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.admin-table tr:hover {
-  background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
-}
-
-/* TABLE IMAGES - Perfect crop */
-.admin-table img {
-  border-radius: 10px;
+.card-row img.card-image {
+  width: 200px;
+  height: 200px;
   object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* TRENDING TOGGLE BUTTON - Premium glassmorphism */
-button[onClick*="toggle"] {
+.card-label {
+  font-weight: 600;
+  color: #666;
+  min-width: 80px;
+  flex: 0 0 auto;
+}
+
+.card-value {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* EDIT MODE */
+.card-value input, .card-value select, .card-value textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.card-value textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* TRENDING BUTTON - Premium */
+.trending-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
+  padding: 0.8rem 1.5rem;
   border: 2px solid;
   background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
   backdrop-filter: blur(10px);
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.9rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  min-width: 120px;
-  justify-content: center;
 }
 
-button[onClick*="toggle"]:hover {
+.trending-toggle:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(102,126,234,0.3);
   border-color: #667eea;
 }
 
-button[onClick*="toggle"]:active {
-  transform: translateY(0);
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-/* ACTION BUTTONS - Compact icons */
-.action-icon {
-  cursor: pointer;
-  padding: 0.75rem;
+.edit-btn, .delete-btn {
+  padding: 0.75rem 1.25rem;
+  border: none;
   border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
   transition: all 0.2s;
-  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.save-btn, .cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
   margin-right: 0.5rem;
-  background: #7f7f7f;
-  border: 1px solid #686868;
-  margin: 5px;
 }
 
-.action-icon:hover {
-  background: #494949;
-  transform: scale(1.1);
-}
-
-/* EDIT/SAVE BUTTONS */
-button[onClick*="save"] {
+.save-btn {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: white;
-  padding: 0.5rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
 }
 
-button[onClick*="cancel"] {
+.cancel-btn {
   background: linear-gradient(135deg, #6c757d, #495057);
   color: white;
-  padding: 0.5rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
 }
 
-/* LOADING STATE */
+/* LOADING */
 .admin-loading {
   display: flex;
   justify-content: center;
@@ -216,127 +255,34 @@ button[onClick*="cancel"] {
   color: #666;
 }
 
-/* ========================================
-   TABLET RESPONSIVE (768px - 1024px)
-   ======================================= */
-@media (max-width: 1024px) {
-  .admin-page {
-    padding: 1.25rem;
-  }
-  
-  .admin-section {
-    padding: 1.5rem;
-  }
-  
-  .admin-form {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
-/* ========================================
-   MOBILE RESPONSIVE (320px - 768px)
-   ======================================= */
+/* PERFECT RESPONSIVE - All devices */
 @media (max-width: 768px) {
   .admin-page {
     padding: 1rem;
   }
   
-  .admin-section {
-    padding: 1.25rem;
+  .card-row {
+    flex-direction: column;
+    gap: 0.75rem;
   }
   
-  .admin-section h2 {
-    font-size: 1.25rem;
-  }
-  
-  /* MOBILE TABLE → CARDS */
-  .admin-table {
-    display: block;
-    font-size: 0.9rem;
-  }
-  
-  .admin-table thead {
-    display: none;
-  }
-  
-  .admin-table tr {
-    display: block;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border: 1px solid #eee;
-    background: white;
-  }
-  
-  .admin-table td {
-    display: block;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #f0f0f0;
-    position: relative;
-    padding-left: 50%;
-  }
-  
-  .admin-table td:before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 45%;
-    padding-right: 1rem;
-    font-weight: 600;
-    color: #666;
-    white-space: nowrap;
-  }
-  
-  .admin-table td:last-child {
-    border-bottom: none;
-  }
-  
-  .admin-table img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  /* MOBILE BUTTONS STACK */
-  .admin-table td:last-child {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  
-  button[onClick*="toggle"] {
+  .card-label {
     min-width: unset;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
   }
   
-  .action-icon {
-    padding: 0.5rem;
-    font-size: 1.1rem;
+  .action-buttons {
+    justify-content: center;
   }
 }
 
-/* ========================================
-   EXTRA SMALL MOBILE (< 480px)
-   ======================================= */
+/* EXTRA SMALL */
 @media (max-width: 480px) {
   .admin-page {
     padding: 0.75rem;
   }
   
-  .admin-section {
-    padding: 1rem;
-  }
-  
-  .admin-table td {
-    padding-left: 40%;
-    font-size: 0.85rem;
-  }
-  
-  .admin-table td:before {
-    width: 35%;
-    font-size: 0.8rem;
+  .product-card {
+    padding: 1.5rem;
   }
 }
 
