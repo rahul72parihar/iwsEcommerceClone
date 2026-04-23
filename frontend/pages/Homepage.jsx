@@ -8,7 +8,6 @@ export default function Homepage() {
       <HeroCarousel />
       <TrendingSection />
       <CategoryCarousel title="Shop By Category" />
-      <div className="longlong"></div>
       {/* <CategoriesSection />
       <ProductSection title="New Arrivals" />
       <OfferBanner />
