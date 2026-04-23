@@ -31,6 +31,7 @@ export default function SearchPage() {
         product.name?.toLowerCase().includes(lowerQuery) ||
         product.title?.toLowerCase().includes(lowerQuery) ||
         product.category?.toLowerCase().includes(lowerQuery) ||
+        product.description?.toLowerCase().includes(lowerQuery)||
         lowerQuery === 'shoe' && product.category === 'SHOES'
       );
       
