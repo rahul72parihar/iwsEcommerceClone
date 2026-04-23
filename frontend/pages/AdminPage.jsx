@@ -128,6 +128,7 @@ const AdminPage = () => {
       if (response.status === "success") {
         setProducts([response.data, ...products]);
         setNewProductForm({
+          id : "",
           title: "",
           price: "",
           image: "",
@@ -156,6 +157,15 @@ const AdminPage = () => {
           Add New Product <FiPlus />
         </h2>
         <form onSubmit={createProduct} className="admin-form">
+          <input
+            data-label="ID:"
+            placeholder="ID"
+            value={newProductForm.id}
+            onChange={(e) =>
+              setNewProductForm({ ...newProductForm, id: e.target.value })
+            }
+            required
+          />
           <input
             data-label="Title:"
             placeholder="Title"
