@@ -28,7 +28,8 @@ export default async function auth(req, res, next) {
     }
 
     req.user = user;
-    console.log('Auth success, req.user set:', req.user._id);
+    req.isAdmin = user.role === 'admin';
+    console.log('Auth success:', { userId: req.user._id, role: user.role, isAdmin: req.isAdmin });
     next();
 
   } catch (error) {

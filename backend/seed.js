@@ -63,6 +63,19 @@ const seedDB = async () => {
     await mongoose.connect(process.env.MONGO_URI);
 
     await Product.deleteMany({});
+
+    // Admin user
+    const adminUser = {
+      name: 'Admin User',
+      email: 'admin@ecom.com',
+      password: 'admin',
+      role: 'admin'
+    };
+
+    await User.deleteMany({});
+    await User.create(adminUser);
+    console.log("✅ Admin user seeded: admin@ecom.com / admin");
+
     await Product.insertMany(hardcodedProductsData);
 
     console.log("✅ Seeded 60 products (20 MEN + 20 WOMEN + 20 SHOES)");

@@ -76,4 +76,45 @@ export const apiService = {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
+
+  // Admin endpoints
+  adminGetProducts: () =>
+    fetchJSON(`${API_BASE}/admin/products`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  adminToggleTrending: (id) =>
+    fetchJSON(`${API_BASE}/admin/products/${id}/toggle-trending`, {
+      method: 'PATCH',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}` 
+      },
+    }),
+
+  adminUpdateProduct: (id, data) =>
+    fetchJSON(`${API_BASE}/admin/products/${id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}` 
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminCreateProduct: (data) =>
+    fetchJSON(`${API_BASE}/admin/products`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}` 
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminDeleteProduct: (id) =>
+    fetchJSON(`${API_BASE}/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
 };

@@ -39,6 +39,9 @@ app.use('/api/auth', authRoutes);
 import cartRoutes from './routes/cart.js';
 app.use('/api/cart', cartRoutes);
 
+import adminRoutes from './routes/admin.js';
+app.use('/api/admin', adminRoutes);
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
