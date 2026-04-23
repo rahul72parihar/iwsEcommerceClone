@@ -236,7 +236,7 @@ const AdminPage = () => {
                 <div key={product._id} className="product-card">
                   <div className="card-row">
                     <span className="card-label">ID:</span>
-                    <span className="card-value">{product._id.slice(-6)}</span>
+                    <span className="card-value">{product.id}</span>
                   </div>
                   <div className="card-row">
                     <span className="card-label">Image:</span>
