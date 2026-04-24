@@ -13,7 +13,13 @@ export default function DesktopNavbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.ui.cartItems);
+  const isAdmin = useSelector((state) => state.auth.isAdmin);
   const categories = ["MEN", "WOMEN", "SHOES"];
+  const adminLinks = [
+    { label: "PRODUCT", path: "/admin" },
+    { label: "BANNER", path: "/admin/banners" },
+    { label: "ORDERS", path: "/admin/orders" },
+  ];
 
   const handleSearch = () => {
     const q = query.trim();
@@ -40,16 +46,27 @@ export default function DesktopNavbar() {
             <HiOutlineBars3 />
           </span>
           <div className="desktopCategories">
-            {categories.map((cat) => (
-              <span
-                key={cat}
-                className="categoryItem"
-                onClick={() => navigate(`/${cat.toLowerCase()}`)}
-                style={{ cursor: "pointer" }}
-              >
-                {cat}
-              </span>
-            ))}
+            {isAdmin
+              ? adminLinks.map((link) => (
+                  <span
+                    key={link.label}
+                    className="categoryItem"
+                    onClick={() => navigate(link.path)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {link.label}
+                  </span>
+                ))
+              : categories.map((cat) => (
+                  <span
+                    key={cat}
+                    className="categoryItem"
+                    onClick={() => navigate(`/${cat.toLowerCase()}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {cat}
+                  </span>
+                ))}
           </div>
         </div>
 
@@ -91,8 +108,7 @@ export default function DesktopNavbar() {
             <div
               className="cartIconWrapper"
               onClick={() => navigate("/cartpage")}
-              style={{ cursor: "pointer" }}
-              style={{ position: "relative", display: "inline-block" }}
+              style={{ cursor: "pointer", position: "relative", display: "inline-block" }}
             >
               <FiShoppingCart />
               {cartItems > 0 && (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { FiEdit3, FiTrash2, FiStar, FiPlus } from "react-icons/fi";
+import { useNavigate, Link } from "react-router-dom";
+import { FiEdit3, FiTrash2, FiStar, FiPlus, FiImage } from "react-icons/fi";
 import { apiService } from "../services/api";
 import { addToast } from "../src/store/slices/uiSlice";
 import "../styles/AdminPage.css";
@@ -18,6 +18,7 @@ const AdminPage = () => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [newProductForm, setNewProductForm] = useState({
+    id: "",
     title: "",
     price: "",
     image: "",
@@ -149,7 +150,22 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      <h1>Admin - Product Management</h1>
+      <h1>Admin Dashboard</h1>
+
+      {/* ADMIN NAVIGATION */}
+      <div className="admin-section">
+        <h2>Management Sections</h2>
+        <div className="admin-nav-cards">
+          <Link to="/admin" className="admin-nav-card active">
+            <FiStar /> Products
+          </Link>
+          <Link to="/admin/banners" className="admin-nav-card">
+            <FiImage /> Banners
+          </Link>
+        </div>
+      </div>
+
+      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Product Management</h2>
 
       {/* NEW PRODUCT FORM */}
       <div className="admin-section">
