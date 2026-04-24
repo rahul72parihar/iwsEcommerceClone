@@ -2,7 +2,10 @@
 const API_BASE = window.API_BASE || 'http://localhost:5000/api';
 
 // 🔥 helper to normalize backend responses
-const normalize = (raw) => raw.products || raw.cart || raw.data || raw;
+const normalize = (raw) => {
+  if (!raw || typeof raw !== 'object') return raw;
+  return raw.products || raw.cart || raw.data || raw;
+};
 
 const fetchJSON = async (url, options = {}) => {
   try {
@@ -114,6 +117,47 @@ export const apiService = {
 
   adminDeleteProduct: (id) =>
     fetchJSON(`${API_BASE}/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  // Admin Banner endpoints
+  adminGetBanners: () =>
+    fetchJSON(`${API_BASE}/admin/banners`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  adminCreateBanner: (data) =>
+    fetchJSON(`${API_BASE}/admin/banners`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminUpdateBanner: (page, index, data) =>
+    fetchJSON(`${API_BASE}/admin/banners/${page}/${index}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminToggleBanner: (page, index) =>
+    fetchJSON(`${API_BASE}/admin/banners/${page}/${index}/toggle`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+    }),
+
+  adminDeleteBanner: (page, index) =>
+    fetchJSON(`${API_BASE}/admin/banners/${page}/${index}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
