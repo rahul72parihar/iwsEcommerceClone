@@ -50,9 +50,9 @@ export default function Sidebar() {
               <li><Link to="/men" onClick={handleClose}>MEN</Link></li>
               <li><Link to="/women" onClick={handleClose}>WOMEN</Link></li>
               <li><Link to="/shoes" onClick={handleClose}>SHOES</Link></li>
-              <li><Link to="/admin" onClick={handleClose}>Manage Products</Link></li>
-              <li><Link to="/admin/banners" onClick={handleClose}>Manage Banners</Link></li>
-              <li><Link to="/admin/orders" onClick={handleClose}>Manage Orders</Link></li>
+              {isAdmin && <li><Link to="/admin" onClick={handleClose}>Manage Products</Link></li>}
+              {isAdmin && <li><Link to="/admin/banners" onClick={handleClose}>Manage Banners</Link></li>}
+              {isAdmin && <li><Link to="/admin/orders" onClick={handleClose}>Manage Orders</Link></li>}
             </ul>
           </div>
 
