@@ -1,8 +1,8 @@
-import '../styles/Cartpage.css'; // Reuse cart styling
-
-export default function CheckoutPage() {
-  return (
-    <div className="cart-page">
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { apiService } from '../services/api.js';
+import '../styles/CheckoutPage.css';
       <h1>Checkout</h1>
       <p>Checkout functionality coming soon!</p>
       <div style={{marginTop: '2rem', fontSize: '1.2rem', color: '#666'}}>
