@@ -92,9 +92,6 @@ export default function DesktopNavbar() {
             />
 
             <div className="searchIcons">
-              <BsMic />
-
-              {/* 🔥 Click search */}
               <FiSearch onClick={handleSearch} />
             </div>
           </div>
