@@ -45,6 +45,9 @@ const getToken = () => localStorage.getItem("token");
 export const apiService = {
   getAllProducts: () => fetchJSON(`${API_BASE}/products`),
 
+  searchProducts: (query) =>
+    fetchJSON(`${API_BASE}/products/search?q=${encodeURIComponent(query)}`),
+
   getProducts: (category, limit = 12) =>
     fetchJSON(`${API_BASE}/products?category=${category}&limit=${limit}`),
 

@@ -73,6 +73,42 @@ router.get("/id/:id", async (req, res) => {
   }
 });
 
+// GET search products
+router.get("/search", async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || !q.trim()) {
+      return res.json({ products: [] });
+    }
+
+    const lowerQuery = q.trim().toLowerCase();
+    const regex = new RegExp(lowerQuery, "i");
+
+    // Find matching categories and subcategories
+    const matchingCategories = await Category.find({ name: regex });
+    const matchingSubcategories = await Subcategory.find({ name: regex });
+
+    const categoryIds = matchingCategories.map((c) => c._id);
+    const subcategoryIds = matchingSubcategories.map((s) => s._id);
+
+    const products = await Product.find({
+      $or: [
+        { title: regex },
+        { description: regex },
+        { category: { $in: categoryIds } },
+        { subcategory: { $in: subcategoryIds } },
+      ],
+    })
+      .populate("category", "name")
+      .populate("subcategory", "name")
+      .limit(50);
+
+    res.json({ products });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Dynamic /:slug - category if MEN/WOMEN/SHOES, else product id
 router.get("/:slug", async (req, res) => {
   try {

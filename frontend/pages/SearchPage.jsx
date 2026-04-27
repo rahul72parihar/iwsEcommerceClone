@@ -18,35 +18,19 @@ export default function SearchPage() {
 
     try {
       setLoading(true);
-      const response = await apiService.getAllProducts();
+      const response = await apiService.searchProducts(searchQuery);
 
       let products = [];
       if (response.status === 'success' && response.data) {
         products = response.data;
       }
 
-      const lowerQuery = searchQuery.toLowerCase().trim();
-      const filtered = products.filter(product =>
-        product.name?.toLowerCase().includes(lowerQuery) ||
-        product.title?.toLowerCase().includes(lowerQuery) ||
-        product.category?.toLowerCase().includes(lowerQuery) ||
-        product.description?.toLowerCase().includes(lowerQuery)||
-        lowerQuery === 'shoe' && product.category === 'SHOES'
-      );
-      
       setAllProducts(products);
-      setFilteredProducts(filtered);
+      setFilteredProducts(products);
     } catch (error) {
       console.error('Search error:', error);
-      // Same mock fallback
-      const lowerQuery = searchQuery.toLowerCase().trim();
-      const filtered = mockProducts.filter(product =>
-        product.name.toLowerCase().includes(lowerQuery) ||
-        product.category.toLowerCase().includes(lowerQuery) ||
-        product.description.toLowerCase().includes(lowerQuery)
-      );
-      setAllProducts(mockProducts);
-      setFilteredProducts(filtered);
+      setAllProducts([]);
+      setFilteredProducts([]);
     } finally {
       setLoading(false);
     }
