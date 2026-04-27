@@ -10,6 +10,18 @@ const normalize = (raw) => {
 const fetchJSON = async (url, options = {}) => {
   try {
     const res = await fetch(url, options);
+    if (res.status === 401) {
+      localStorage.removeItem("token");
+
+      // optional: clear other auth data
+      localStorage.removeItem("user");
+
+      // redirect to login page
+      window.location.href = "/login";
+
+      return { data: null, status: "error", error: "Unauthorized" };
+    }
+
     let raw;
     try {
       raw = await res.json();

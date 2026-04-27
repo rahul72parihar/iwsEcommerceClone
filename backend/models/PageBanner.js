@@ -6,15 +6,15 @@ const bannerSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, // URL or Cloudinary link
+    type: String, 
     required: true,
   },
   link: {
-    type: String, // where banner redirects
+    type: String, 
     default: "/",
   },
   order: {
-    type: Number, // for sorting banners
+    type: Number,
     default: 0,
   },
   isActive: {
@@ -29,7 +29,7 @@ const pageBannerSchema = new mongoose.Schema({
     enum: ["main", "men", "women", "shoes"],
     required: true,
   },
-  banners: [bannerSchema], // array of banners (you can have 34 here)
+  banners: [bannerSchema],
 }, { timestamps: true });
 
 export default mongoose.model("PageBanner", pageBannerSchema);

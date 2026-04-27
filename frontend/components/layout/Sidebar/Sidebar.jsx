@@ -11,7 +11,7 @@ export default function Sidebar() {
   const isOpen = useSelector((state) => state.ui.isSidebarOpen);
   const cartItems = useSelector((state) => state.ui.cartItems);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const isAdmin = useSelector((state) => state.auth.isAdmin);
 
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +50,9 @@ export default function Sidebar() {
               <li><Link to="/men" onClick={handleClose}>MEN</Link></li>
               <li><Link to="/women" onClick={handleClose}>WOMEN</Link></li>
               <li><Link to="/shoes" onClick={handleClose}>SHOES</Link></li>
+              <li><Link to="/admin" onClick={handleClose}>Manage Products</Link></li>
+              <li><Link to="/admin/banners" onClick={handleClose}>Manage Banners</Link></li>
+              <li><Link to="/admin/orders" onClick={handleClose}>Manage Orders</Link></li>
             </ul>
           </div>
 
