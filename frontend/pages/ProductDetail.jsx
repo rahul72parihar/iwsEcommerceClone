@@ -9,7 +9,6 @@ import '../styles/ProductDetail.css';
 
 export default function ProductDetail() {
   const { id } = useParams();
-  console.log("ID -> ",id);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,7 +22,6 @@ export default function ProductDetail() {
         const response = await apiService.getProduct(id);
         if (response.status === 'success') {
           setProduct(response.data);
-          console.log(response.data);
         } else {
           setError('Product not found');
         }
