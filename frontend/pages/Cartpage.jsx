@@ -8,6 +8,7 @@ import { setCartCount } from '../src/store/slices/uiSlice';
 export default function Cartpage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const token = useSelector((state) => state.auth?.token);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,24 +32,42 @@ export default function Cartpage() {
     fetchCart();
   }, [token, dispatch]);
 
-  const total = Array.isArray(cartItems) ? cartItems.reduce((sum, item) => sum + (item.product?.price * item.quantity || 0), 0) : 0;
+  const total = Array.isArray(cartItems)
+    ? cartItems.reduce((sum, item) => sum + (item.product?.price * item.quantity || 0), 0)
+    : 0;
 
   const updateQuantity = async (productId, currentQuantity, newQuantity) => {
-    if (newQuantity < 1) return;
-    
-    const delta = newQuantity - currentQuantity;
-    const result = await apiService.addToCart(productId, delta, token);
-    if (result.status === 'success') {
-      setCartItems(Array.isArray(result.data) ? result.data : []);
-      dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+    if (newQuantity < 1 || isProcessing) return;
+
+    setIsProcessing(true);
+    try {
+      const delta = newQuantity - currentQuantity;
+      const result = await apiService.addToCart(productId, delta, token);
+      if (result.status === 'success') {
+        setCartItems(Array.isArray(result.data) ? result.data : []);
+        dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+      }
+    } catch (err) {
+      console.error('Update quantity error:', err);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const removeItem = async (productId) => {
-    const result = await apiService.removeFromCart(productId, token);
-    if (result.status === 'success') {
-      setCartItems(Array.isArray(result.data) ? result.data : []);
-      dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+    if (isProcessing) return;
+
+    setIsProcessing(true);
+    try {
+      const result = await apiService.removeFromCart(productId, token);
+      if (result.status === 'success') {
+        setCartItems(Array.isArray(result.data) ? result.data : []);
+        dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+      }
+    } catch (err) {
+      console.error('Remove item error:', err);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -89,22 +108,25 @@ export default function Cartpage() {
                 </div>
                 <div className="cart-controls">
                   <div className="quantity-controls">
-                    <button 
+                    <button
                       className="quantity-btn"
+                      disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) - 1)}
                     >
-                      -
+                      {isProcessing ? '-' : '-'}
                     </button>
                     <span className="quantity">{item.quantity || 1}</span>
-                    <button 
+                    <button
                       className="quantity-btn"
+                      disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) + 1)}
                     >
-                      +
+                      {isProcessing ? '+' : '+'}
                     </button>
                   </div>
-                  <button 
+                  <button
                     className="remove-btn"
+                    disabled={isProcessing}
                     onClick={() => removeItem(item.product?._id)}
                   >
                     Remove
