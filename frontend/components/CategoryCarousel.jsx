@@ -51,9 +51,11 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
         const responses = await Promise.all(promises);
 
         const sections = {};
-        sections[cat] = Array.isArray(responses[i]?.data)
-          ? responses[i].data
-          : [];
+        CATEGORIES.forEach((cat, i) => {
+          sections[cat] = Array.isArray(responses[i]?.data)
+            ? responses[i].data
+            : [];
+        });
 
         setCategorySections(sections);
       } catch (err) {
