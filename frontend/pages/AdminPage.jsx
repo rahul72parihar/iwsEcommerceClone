@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { FiEdit3, FiTrash2, FiStar, FiPlus, FiImage } from "react-icons/fi";
+import { FiEdit3, FiTrash2, FiStar, FiPlus, FiImage, FiLayers } from "react-icons/fi";
 import { apiService } from "../services/api";
 import { addToast } from "../src/store/slices/uiSlice";
 import "../styles/AdminPage.css";
@@ -161,6 +161,9 @@ const AdminPage = () => {
           </Link>
           <Link to="/admin/banners" className="admin-nav-card">
             <FiImage /> Banners
+          </Link>
+          <Link to="/admin/categories" className="admin-nav-card">
+            <FiLayers /> Categories
           </Link>
         </div>
       </div>
@@ -357,3 +360,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+

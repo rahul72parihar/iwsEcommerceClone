@@ -82,7 +82,7 @@ export default function ProductDetail() {
         <div className="productInfo">
           <h1 className="productTitle">{product.title}</h1>
           <p className="productPrice">${Number(product.price).toFixed(2)}</p>
-          <div className="productCategory">Category: {product.category}</div>
+          <div className="productCategory">Category: {product.category?.name || product.category}</div>
           <div className="addToCart">
             <button className="addButton" onClick={handleAddToCart}>
               <FiPlus /> Add to Cart
