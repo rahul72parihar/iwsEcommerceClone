@@ -61,7 +61,7 @@ export default function ProductCard({ product }) {
         <div className="productInfo">
           <div className="productInfoContent">
             <h6 className="productTitle">{product.title}</h6>
-            <p className="productPrice">${product.price}</p>
+            <p className="productPrice">₹{product.price}</p>
           </div>
         </div>
       </Link>

@@ -15,6 +15,7 @@ export default function ProductDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAdding, setIsAdding] = useState(false);
   const carouselRef = useRef(null);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -70,7 +71,9 @@ export default function ProductDetail() {
       dispatch(addToast({ type: 'error', message: 'Please login to add to cart' }));
       return;
     }
+    if (isAdding) return;
 
+    setIsAdding(true);
     try {
       const result = await apiService.addToCart(product._id, 1);
       if (result.status === 'success') {
@@ -82,6 +85,7 @@ export default function ProductDetail() {
     } catch (error) {
       dispatch(addToast({ type: 'error', message: 'Network error' }));
     }
+    setIsAdding(false);
   };
 
 
@@ -130,11 +134,11 @@ export default function ProductDetail() {
         </div>
         <div className="productInfo">
           <h1 className="productTitle">{product.title}</h1>
-          <p className="productPrice">${Number(product.price).toFixed(2)}</p>
+          <p className="productPrice">₹{Number(product.price).toFixed(2)}</p>
           <div className="productCategory">Category: {product.category?.name || product.category}</div>
           <div className="addToCart">
-            <button className="addButton" onClick={handleAddToCart}>
-              <FiPlus /> Add to Cart
+            <button className="addButton" disabled={isAdding} onClick={handleAddToCart}>
+              <FiPlus /> {isAdding ? 'Adding...' : 'Add to Cart'}
             </button>
           </div>
           <div className="productDescription">

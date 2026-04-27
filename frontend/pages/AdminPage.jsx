@@ -522,7 +522,7 @@ const AdminPage = () => {
                           onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
                         />
                       ) : (
-                        `$${product.price}`
+                        `₹${product.price}`
                       )}
                     </span>
                   </div>

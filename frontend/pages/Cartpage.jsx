@@ -85,7 +85,7 @@ export default function Cartpage() {
                 </div>
                 <div className="cart-item-details">
                   <h3>{item.product?.title || 'Unknown Item'}</h3>
-                  <p className="price-qty">${item.product?.price || 0} x {item.quantity || 1}</p>
+                  <p className="price-qty">₹{item.product?.price || 0} x {item.quantity || 1}</p>
                 </div>
                 <div className="cart-controls">
                   <div className="quantity-controls">
@@ -111,7 +111,7 @@ export default function Cartpage() {
                   </button>
                 </div>
                 <div className="cart-item-total">
-                  ${((item.product?.price || 0) * (item.quantity || 1)).toFixed(2)}
+                  ₹{((item.product?.price || 0) * (item.quantity || 1)).toFixed(2)}
                 </div>
               </div>
             ))}
@@ -120,11 +120,11 @@ export default function Cartpage() {
             <h3>Order Summary</h3>
             <div className="summary-row">
               <span>Subtotal ({Array.isArray(cartItems) ? cartItems.length : 0} items):</span>
-              <span>${total.toFixed(2)}</span>
+              <span>₹{total.toFixed(2)}</span>
             </div>
             <div className="summary-row total-row">
               <span>Total:</span>
-              <span>${total.toFixed(2)}</span>
+              <span>₹{total.toFixed(2)}</span>
             </div>
             <button className="checkout-btn" onClick={handleCheckout}>
               Proceed to Checkout →
