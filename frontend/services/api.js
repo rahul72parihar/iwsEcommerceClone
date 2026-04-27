@@ -173,4 +173,68 @@ export const apiService = {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
+
+  // Admin Category endpoints
+  adminGetCategories: () =>
+    fetchJSON(`${API_BASE}/admin/categories`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  adminCreateCategory: (data) =>
+    fetchJSON(`${API_BASE}/admin/categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminUpdateCategory: (id, data) =>
+    fetchJSON(`${API_BASE}/admin/categories/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminDeleteCategory: (id) =>
+    fetchJSON(`${API_BASE}/admin/categories/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  // Admin Subcategory endpoints
+  adminGetSubcategories: () =>
+    fetchJSON(`${API_BASE}/admin/subcategories`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  adminCreateSubcategory: (data) =>
+    fetchJSON(`${API_BASE}/admin/subcategories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminUpdateSubcategory: (id, data) =>
+    fetchJSON(`${API_BASE}/admin/subcategories/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(data),
+    }),
+
+  adminDeleteSubcategory: (id) =>
+    fetchJSON(`${API_BASE}/admin/subcategories/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
 };

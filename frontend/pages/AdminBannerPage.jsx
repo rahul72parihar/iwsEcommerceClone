@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { FiEdit3, FiTrash2, FiPlus, FiEye, FiEyeOff, FiImage, FiStar } from "react-icons/fi";
+import { FiEdit3, FiTrash2, FiPlus, FiEye, FiEyeOff, FiImage, FiStar, FiLayers } from "react-icons/fi";
 import { apiService } from "../services/api";
 import { addToast } from "../src/store/slices/uiSlice";
 import "../styles/AdminPage.css";
@@ -158,6 +158,9 @@ const AdminBannerPage = () => {
           </Link>
           <Link to="/admin/banners" className="admin-nav-card active">
             <FiImage /> Banners
+          </Link>
+          <Link to="/admin/categories" className="admin-nav-card">
+            <FiLayers /> Categories
           </Link>
         </div>
       </div>

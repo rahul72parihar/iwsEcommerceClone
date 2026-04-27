@@ -24,6 +24,7 @@ import SearchPage from "../pages/SearchPage";
 import AdminPage from "../pages/AdminPage";
 import AdminBannerPage from "../pages/AdminBannerPage";
 import AdminOrdersPage from "../pages/AdminOrdersPage";
+import AdminCategoriesPage from "../pages/AdminCategoriesPage";
 
 import { loadUser } from "./store/slices/authSlice";
 import { loadCart } from "./store/slices/uiSlice";
@@ -89,6 +90,7 @@ useEffect(() => {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/banners" element={<AdminBannerPage />} />
         <Route path="/admin/orders" element={<AdminOrdersPage />} />
+        <Route path="/admin/categories" element={<AdminCategoriesPage />} />
       </Route>
     </Routes>
   );
@@ -96,4 +98,3 @@ useEffect(() => {
 
 
 export default App;
-
