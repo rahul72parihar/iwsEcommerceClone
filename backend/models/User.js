@@ -23,18 +23,10 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
-  cart: [{
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    },
-    quantity: {
-      type: Number,
-      default: 1,
-      min: 1
-    }
-  }],
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart'
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],
