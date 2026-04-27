@@ -12,7 +12,6 @@ router.get("/", async (req, res) => {
 
     let query = {};
 
-    // ✅ CATEGORY FILTER
     if (category) {
       const categoryDoc = await Category.findOne({
         name: category.toUpperCase(),
@@ -22,7 +21,6 @@ router.get("/", async (req, res) => {
 
       query.category = categoryDoc._id;
 
-      // ✅ SUBCATEGORY FILTER (optional)
       if (subCategory) {
         const subCatDoc = await Subcategory.findOne({
           name: subCategory,
@@ -63,7 +61,9 @@ router.get("/trending", async (req, res) => {
 // GET product by custom id field
 router.get("/id/:id", async (req, res) => {
   try {
-    const product = await Product.findOne({ id: req.params.id });
+    const product = await Product.findOne({ id: req.params.id })
+      .populate("category", "name")
+      .populate("subcategory", "name");
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -79,23 +79,27 @@ router.get("/:slug", async (req, res) => {
     const slug = req.params.slug;
     const limit = parseInt(req.query.limit) || 12;
 
-    // 🔥 STEP 1: Check if slug is a category
     const categoryDoc = await Category.findOne({ name: slug.toUpperCase() });
-    console.log("CATEGORY DOC -> ", categoryDoc);
+
     if (categoryDoc) {
-      // ✅ Return products of that category
       const products = await Product.find({
         category: categoryDoc._id,
       }).limit(limit);
 
       return res.json({ products });
     } else {
-      throw error(400);
+      const product = await Product.findOne({ id: slug })
+        .populate("category", "name")
+        .populate("subcategory", "name");
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json(product);
     }
   } catch (error) {
-    console.error("❌ GET /:slug error:", error);
     res.status(500).json({ message: error.message });
   }
 });
 
 export default router;
+

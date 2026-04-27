@@ -19,7 +19,6 @@ export default function SearchPage() {
     try {
       setLoading(true);
       const response = await apiService.getAllProducts();
-      console.log("API Response:", response);
 
       let products = [];
       if (response.status === 'success' && response.data) {
