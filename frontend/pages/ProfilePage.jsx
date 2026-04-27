@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../src/store/slices/authSlice";
 import { resetCartOnLogout } from "../src/store/slices/uiSlice";
+import { Navigate } from "react-router-dom";
 
 import "../styles/ProfilePage.css";
 
@@ -17,16 +18,8 @@ export default function ProfilePage() {
     navigate("/");
   };
 
-
   if (!user) {
-    return (
-      <div className="profilePage">
-        <div className="profileContainer">
-          <h1>Profile</h1>
-          <p>Please <a href="/login">log in</a> to view your profile.</p>
-        </div>
-      </div>
-    );
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -36,13 +29,13 @@ export default function ProfilePage() {
         <div className="profileCard">
           <div className="profileAvatar">
             <div className="avatarPlaceholder">
-              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+              {user.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
           </div>
           <div className="profileInfo">
-            <h2>{user.name || 'User'}</h2>
+            <h2>{user.name || "User"}</h2>
             <p className="email">{user.email}</p>
-            <p className="userId">ID: {user.id?.slice(-6) || 'N/A'}</p>
+            <p className="userId">ID: {user.id?.slice(-6) || "N/A"}</p>
           </div>
           <button className="logoutBtn" onClick={handleLogout}>
             Sign Out
@@ -52,4 +45,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
