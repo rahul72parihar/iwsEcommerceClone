@@ -12,6 +12,10 @@
   --white: #ffffff;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
 .no-scroll {
   position: fixed;

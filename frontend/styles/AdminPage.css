@@ -108,6 +108,18 @@
   box-shadow: 0 12px 30px rgba(102,126,234,0.4);
 }
 
+.admin-form .field-error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 4px rgba(220,53,69,0.15) !important;
+}
+
+.admin-form .error-msg {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: -1rem;
+  font-weight: 500;
+}
+
 /* PRODUCT CARDS - Vertical layout EVERYWHERE */
 .admin-products {
   display: flex;
@@ -376,6 +388,180 @@
   
   .product-card {
     padding: 1.5rem;
+  }
+}
+
+/* ========================================
+   ADDITIONAL IMAGES MANAGEMENT
+   ======================================= */
+
+.images-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e1e5e9;
+}
+
+.images-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.image-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.image-input-row input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.image-input-row input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+
+.add-image-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-image-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(40,167,69,0.3);
+}
+
+.image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+.image-item input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.image-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.remove-image-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.remove-image-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+}
+
+/* More images display in view mode */
+.more-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.card-image-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.card-image-thumb:hover {
+  transform: scale(1.05);
+}
+
+/* Edit images section inside card */
+.edit-images-section {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Responsive for images */
+@media (max-width: 768px) {
+  .image-item {
+    flex-wrap: wrap;
+  }
+  
+  .image-item input {
+    min-width: 150px;
+    order: 3;
+    flex-basis: 100%;
+  }
+  
+  .card-image-thumb {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .add-image-btn {
+    justify-content: center;
+  }
+  
+  .card-image-thumb {
+    width: 50px;
+    height: 50px;
   }
 }
 

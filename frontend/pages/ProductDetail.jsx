@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
@@ -12,8 +12,38 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const carouselRef = useRef(null);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+
+  const openModal = (image) => {
+    setModalImage(image);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCarouselScroll = () => {
+    if (carouselRef.current) {
+      const index = Math.round(carouselRef.current.scrollLeft / carouselRef.current.offsetWidth);
+      setCurrentSlide(index);
+    }
+  };
+
+  const scrollToSlide = (index) => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollTo({
+        left: carouselRef.current.offsetWidth * index,
+        behavior: 'smooth'
+      });
+    }
+    setCurrentSlide(index);
+  };
   
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,7 +72,7 @@ export default function ProductDetail() {
     }
 
     try {
-      const result = await apiService.addToCart(id, 1);
+      const result = await apiService.addToCart(product._id, 1);
       if (result.status === 'success') {
         dispatch(setCartCount(result.data.length));
         dispatch(addToast({ type: 'success', message: 'Added to cart!' }));
@@ -58,24 +88,45 @@ export default function ProductDetail() {
   if (loading) return <div className="loading">Loading product...</div>;
   if (error || !product) return <div className="error">{error || 'Product not found'}</div>;
 
-  // Generate 3 images (same image for demo, replace with variants later)
-  const images = [
-    product.image,
-    product.image,
-    product.image
-  ];
+  const allImages = [product.image, ...(product.images || [])].filter(Boolean);
 
   return (
     <main className="productDetailMain">
       <div className="productDetailContainer">
         <div className="productImages">
-          <div className="mainImage">
-            <img src={images[0]} alt={product.title} />
+          {/* Desktop Grid */}
+          <div className="imageGrid">
+            {allImages.map((img, idx) => (
+              <div key={idx} className="imageGridItem">
+                <img src={img} alt={`${product.title} ${idx + 1}`} onClick={() => openModal(img)} />
+              </div>
+            ))}
           </div>
-          <div className="thumbImages">
-            <img src={images[1]} alt={product.title} className="thumb" />
-            <img src={images[2]} alt={product.title} className="thumb" />
+
+          {/* Mobile Carousel */}
+          <div
+            className="mobileCarousel"
+            ref={carouselRef}
+            onScroll={handleCarouselScroll}
+          >
+            {allImages.map((img, idx) => (
+              <div key={idx} className="carouselSlide">
+                <img src={img} alt={`${product.title} ${idx + 1}`} onClick={() => openModal(img)} />
+              </div>
+            ))}
           </div>
+          {allImages.length > 1 && (
+            <div className="carouselDots">
+              {allImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`carouselDot ${idx === currentSlide ? 'active' : ''}`}
+                  onClick={() => scrollToSlide(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="productInfo">
           <h1 className="productTitle">{product.title}</h1>
@@ -92,6 +143,14 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="imageModalOverlay" onClick={closeModal}>
+          <div className="imageModalContent" onClick={(e) => e.stopPropagation()}>
+            <button className="imageModalClose" onClick={closeModal}>×</button>
+            <img src={modalImage} alt="Enlarged product" />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
