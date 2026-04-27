@@ -62,6 +62,11 @@ export default function Sidebar() {
               Cart ({cartItems})
             </Link>
           </div>
+          <div className="sidebar-section">
+            <Link to="/profile" onClick={handleClose}>
+              Profile
+            </Link>
+          </div>
 
           {/* Auth Section */}
           <div className="sidebar-section">
