@@ -50,12 +50,10 @@ export default function HeroCarousel({ category = null }) {
       style={{ backgroundImage: `url(${current?.image})` }}
     >
       <div className="hero-overlay" />
-
       {/* ONLY content is clickable */}
-      <Link to={linkTarget}>
+      <Link className="hero-link" to={linkTarget}>
         <div className="hero-content">
           <h1>{current?.title}</h1>
-          <p>{category || "Featured"} Collection</p>
         </div>
       </Link>
 

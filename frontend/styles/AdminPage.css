@@ -354,16 +354,16 @@ input[type="checkbox"] {
 }
 
 .card-image {
-  width: 48px;
-  height: 48px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
 }
 
 .card-image-thumb {
-  width: 36px;
-  height: 36px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
@@ -465,6 +465,11 @@ input[type="checkbox"] {
   min-height: 60vh;
   font-size: 1rem;
   color: var(--color-text-secondary);
+}
+
+.banner-preview > img{
+  margin-top: 10px;
+  width: 100px;
 }
 
 /* ===== Responsive ===== */

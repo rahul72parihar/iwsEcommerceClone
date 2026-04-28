@@ -84,7 +84,7 @@ export default function Cartpage() {
     return (
       <div className="cart-empty">
         <h1>Cart</h1>
-        <p>Please <a href="/login">login</a> to view your cart</p>
+        <p>Please <a className='link' href="/login">login</a> to view your cart</p>
       </div>
     );
   }
