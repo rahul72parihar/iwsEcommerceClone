@@ -2,6 +2,7 @@ import express from 'express';
 import Product from '../models/Product.js';
 import PageBanner from '../models/PageBanner.js';
 import Category from '../models/Category.js';
+import Cart from '../models/Cart.js';
 import Subcategory from '../models/Subcategory.js';
 import auth from '../middleware/auth.js';
 
@@ -101,6 +102,8 @@ router.delete('/products/:id', auth, requireAdmin, asyncHandler(async (req, res)
       message: 'Product not found'
     });
   }
+
+  await Cart.deleteMany({ product: req.params.id });
 
   res.status(200).json({
     success: true,
