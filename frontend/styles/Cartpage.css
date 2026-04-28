@@ -118,6 +118,8 @@
 /* remove */
 .remove-btn {
   background: none;
+  font-size: 20px;
+  padding: 5px;
   border: none;
   color: #888;
   font-size: 0.8rem;
@@ -205,10 +207,8 @@
   .cart-item {
     grid-template-columns: 60px 1fr;
   }
-
-  .cart-controls {
-    grid-column: span 2;
-    align-items: flex-start;
+  .cart-controls{
+    width: 100px;
   }
 
   .cart-item-total {
