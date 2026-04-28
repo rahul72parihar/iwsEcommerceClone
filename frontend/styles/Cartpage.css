@@ -9,7 +9,7 @@
 
 .cart-page h1 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #111;
   margin-bottom: 2rem;
   font-weight: 500;
@@ -23,18 +23,14 @@
   margin: 0 auto;
 }
 
-.cart-empty h1 {
-  font-size: 2rem;
+.cart-empty h2 {
+  font-size: 1.7rem;
   margin-bottom: 0.5rem;
+  font-weight: 300;
 }
 
 .cart-empty p {
   color: #666;
-}
-
-.cart-empty a {
-  color: #111;
-  text-decoration: underline;
 }
 
 /* ===== LAYOUT ===== */

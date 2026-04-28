@@ -8,36 +8,36 @@ const CATEGORIES = ["MEN", "WOMEN", "SHOES"];
 const ITEM_WIDTH = 320;
 const SCROLL_AMOUNT = ITEM_WIDTH + 24;
 
-export default function CategoryCarousel({ title = "Featured by Category" }) {
+export default function CategoryCarousel() {
   const [categorySections, setCategorySections] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showArrows, setShowArrows] = useState({});
 
   const carouselRefs = useRef({});
 
+  /* ===== SCROLL ===== */
   const scrollCarousel = (category, direction) => {
     const ref = carouselRefs.current[category];
     if (!ref) return;
 
-    const scrollLeft = direction === "left";
     const currentScroll = ref.scrollLeft;
     const maxScroll = ref.scrollWidth - ref.clientWidth;
 
-    if (scrollLeft) {
-      if (currentScroll <= 0) {
-        ref.scrollTo({ left: maxScroll, behavior: "smooth" });
-      } else {
-        ref.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
-      }
+    if (direction === "left") {
+      ref.scrollTo({
+        left: currentScroll <= 0 ? maxScroll : currentScroll - SCROLL_AMOUNT,
+        behavior: "smooth",
+      });
     } else {
-      if (currentScroll >= maxScroll) {
-        ref.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        ref.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
-      }
+      ref.scrollTo({
+        left: currentScroll >= maxScroll ? 0 : currentScroll + SCROLL_AMOUNT,
+        behavior: "smooth",
+      });
     }
   };
 
+  /* ===== FETCH DATA ===== */
   useEffect(() => {
     const fetchCategoriesData = async () => {
       try {
@@ -45,7 +45,7 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
         setError(null);
 
         const promises = CATEGORIES.map((cat) =>
-          apiService.getProducts(cat, 5),
+          apiService.getProducts(cat, 5)
         );
 
         const responses = await Promise.all(promises);
@@ -69,11 +69,45 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
     fetchCategoriesData();
   }, []);
 
-  // ✅ LOADING STATE
+  /* ===== CHECK SCROLLABILITY (SAFE) ===== */
+  useEffect(() => {
+    Object.keys(carouselRefs.current).forEach((category) => {
+      const el = carouselRefs.current[category];
+      if (!el) return;
+
+      const isScrollable = el.scrollWidth > el.clientWidth;
+
+      setShowArrows((prev) => {
+        if (prev[category] === isScrollable) return prev; // ✅ prevent loop
+        return { ...prev, [category]: isScrollable };
+      });
+    });
+  }, [categorySections]);
+
+  /* ===== HANDLE RESIZE ===== */
+  useEffect(() => {
+    const handleResize = () => {
+      Object.keys(carouselRefs.current).forEach((category) => {
+        const el = carouselRefs.current[category];
+        if (!el) return;
+
+        const isScrollable = el.scrollWidth > el.clientWidth;
+
+        setShowArrows((prev) => {
+          if (prev[category] === isScrollable) return prev;
+          return { ...prev, [category]: isScrollable };
+        });
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  /* ===== LOADING ===== */
   if (loading) {
     return (
       <section className="categoryCarouselSection">
-        <h5 className="productSectionTitle">{title}</h5>
         <div className="categoryCarouselsContainer">
           {CATEGORIES.map((category) => (
             <div key={category} className="categoryCarouselWrapper">
@@ -88,11 +122,10 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
     );
   }
 
-  // ✅ ERROR STATE
+  /* ===== ERROR ===== */
   if (error) {
     return (
       <section className="categoryCarouselSection">
-        <h5 className="productSectionTitle">{title}</h5>
         <div className="categoryCarouselsContainer">
           <div className="noProducts">{error}</div>
         </div>
@@ -102,12 +135,10 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
 
   return (
     <section className="categoryCarouselSection">
-      <h5 className="productSectionTitle">{title}</h5>
       <div className="categoryCarouselsContainer">
         {CATEGORIES.map((category) => {
           const products = categorySections[category] || [];
 
-          // ✅ EMPTY STATE
           if (products.length === 0) {
             return (
               <div key={category} className="categoryCarouselWrapper">
@@ -124,11 +155,12 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
           return (
             <div key={category} className="categoryCarouselWrapper">
               <h3 className="categoryTitle">{category}</h3>
+
               <div className="carouselContainer">
                 <div
                   className="categoriesCarousel"
                   ref={(el) => {
-                    if (el) carouselRefs.current[category] = el;
+                    if (el) carouselRefs.current[category] = el; // ✅ no setState here
                   }}
                 >
                   {products.map((product) => (
@@ -138,19 +170,24 @@ export default function CategoryCarousel({ title = "Featured by Category" }) {
                   ))}
                 </div>
 
-                <button
-                  className="carouselArrow left"
-                  onClick={() => scrollCarousel(category, "left")}
-                >
-                  ‹
-                </button>
+                {/* ===== CONDITIONAL ARROWS ===== */}
+                {showArrows[category] && (
+                  <>
+                    <button
+                      className="carouselArrow left"
+                      onClick={() => scrollCarousel(category, "left")}
+                    >
+                      ‹
+                    </button>
 
-                <button
-                  className="carouselArrow right"
-                  onClick={() => scrollCarousel(category, "right")}
-                >
-                  ›
-                </button>
+                    <button
+                      className="carouselArrow right"
+                      onClick={() => scrollCarousel(category, "right")}
+                    >
+                      ›
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           );

@@ -7,7 +7,7 @@ export default function Homepage() {
     <>
       <HeroCarousel />
       <TrendingSection />
-      <CategoryCarousel title="Shop By Category" />
+      <CategoryCarousel />
       {/* <CategoriesSection />
       <ProductSection title="New Arrivals" />
       <OfferBanner />

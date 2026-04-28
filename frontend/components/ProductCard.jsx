@@ -58,10 +58,10 @@ export default function ProductCard({ product }) {
         <div className="productImage">
           <img src={product.image} alt={product.title} loading="lazy" />
         </div>
-        <div className="productInfo">
+        <div>
           <div className="productInfoContent">
-            <h6 className="productTitle">{product.title}</h6>
-            <p className="productPrice">₹{product.price}</p>
+            <p className="productCardInfoTitle">{product.title}</p>
+            <p className="productCardInfoPrice">₹{product.price}</p>
           </div>
         </div>
       </Link>

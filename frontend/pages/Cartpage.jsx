@@ -96,7 +96,7 @@ export default function Cartpage() {
         <div className="loading">Loading cart...</div>
       ) : Array.isArray(cartItems) && cartItems.length === 0 ? (
         <div className="cart-empty">
-          <h2>Your cart is empty 😢</h2>
+          <h2>Your cart is empty</h2>
           <p>Start shopping to fill your cart!</p>
         </div>
       ) : Array.isArray(cartItems) ? (
