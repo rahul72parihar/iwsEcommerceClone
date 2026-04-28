@@ -81,6 +81,17 @@ export const addToCart = async (req, res) => {
     console.error('ADD TO CART ERROR:', err);
 
     if (err.code === 11000) {
+      // Detect the specific stray unique user_1 index issue
+      const isUserIndexError = err.message?.includes('index: user_1 ') || 
+                               err.keyPattern?.user !== undefined;
+      
+      if (isUserIndexError) {
+        return res.status(500).json({
+          status: 'error',
+          message: 'Database index misconfiguration detected. Please run: node backend/fixCartIndexes.js'
+        });
+      }
+
       return res.status(409).json({
         status: 'error',
         message: 'Duplicate cart item detected. Please retry.'
