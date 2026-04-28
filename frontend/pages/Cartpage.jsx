@@ -17,10 +17,11 @@ export default function Cartpage() {
     const fetchCart = async () => {
       if (token) {
         setLoading(true);
-        const result = await apiService.getCart(token);
+        const result = await apiService.getCart();
         if (result.status === 'success') {
-          setCartItems(Array.isArray(result.data) ? result.data : []);
-          dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+          const items = result.data?.items || [];
+          setCartItems(Array.isArray(items) ? items : []);
+          dispatch(setCartCount(Array.isArray(items) ? items.length : 0));
         }
         setLoading(false);
       } else {
@@ -41,11 +42,11 @@ export default function Cartpage() {
 
     setIsProcessing(true);
     try {
-      const delta = newQuantity - currentQuantity;
-      const result = await apiService.addToCart(productId, delta, token);
+      const result = await apiService.updateCartItem(productId, newQuantity);
       if (result.status === 'success') {
-        setCartItems(Array.isArray(result.data) ? result.data : []);
-        dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+        const items = result.data?.items || [];
+        setCartItems(Array.isArray(items) ? items : []);
+        dispatch(setCartCount(Array.isArray(items) ? items.length : 0));
       }
     } catch (err) {
       console.error('Update quantity error:', err);
@@ -59,10 +60,11 @@ export default function Cartpage() {
 
     setIsProcessing(true);
     try {
-      const result = await apiService.removeFromCart(productId, token);
+      const result = await apiService.removeFromCart(productId);
       if (result.status === 'success') {
-        setCartItems(Array.isArray(result.data) ? result.data : []);
-        dispatch(setCartCount(Array.isArray(result.data) ? result.data.length : 0));
+        const items = result.data?.items || [];
+        setCartItems(Array.isArray(items) ? items : []);
+        dispatch(setCartCount(Array.isArray(items) ? items.length : 0));
       }
     } catch (err) {
       console.error('Remove item error:', err);
@@ -113,7 +115,7 @@ export default function Cartpage() {
                       disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) - 1)}
                     >
-                      {isProcessing ? '-' : '-'}
+                      {isProcessing ? '...' : '-'}
                     </button>
                     <span className="quantity">{item.quantity || 1}</span>
                     <button
@@ -121,7 +123,7 @@ export default function Cartpage() {
                       disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) + 1)}
                     >
-                      {isProcessing ? '+' : '+'}
+                      {isProcessing ? '...' : '+'}
                     </button>
                   </div>
                   <button

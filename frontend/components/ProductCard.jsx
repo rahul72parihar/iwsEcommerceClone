@@ -26,9 +26,9 @@ export default function ProductCard({ product }) {
 
     setIsLoading(true);
     try {
-      const result = await apiService.addToCart(product._id || product.id, 1, token);
+      const result = await apiService.addToCart(product._id || product.id, 1);
       if (result.status === 'success') {
-        dispatch(setCartCount(result.data.length));
+        dispatch(setCartCount(result.data?.items?.length || 0));
         dispatch(addToast({
           type: 'success',
           message: 'Item added to cart! 🛒'

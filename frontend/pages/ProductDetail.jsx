@@ -77,7 +77,7 @@ export default function ProductDetail() {
     try {
       const result = await apiService.addToCart(product._id, 1);
       if (result.status === 'success') {
-        dispatch(setCartCount(result.data.length));
+        dispatch(setCartCount(result.data?.items?.length || 0));
         dispatch(addToast({ type: 'success', message: 'Added to cart!' }));
       } else {
         dispatch(addToast({ type: 'error', message: 'Failed to add to cart' }));

@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cart'
-  },
   role: {
     type: String,
     enum: ['user', 'admin'],

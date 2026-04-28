@@ -4,7 +4,9 @@ const API_BASE = window.API_BASE || 'http://localhost:5000/api';
 // 🔥 helper to normalize backend responses
 const normalize = (raw) => {
   if (!raw || typeof raw !== 'object') return raw;
-  return raw.products || raw.cart || raw.data || raw;
+  // Cart endpoints now return { status, cart: { items, user, ... } }
+  if (raw.cart && Array.isArray(raw.cart.items)) return raw.cart;
+  return raw.products || raw.data || raw;
 };
 
 const fetchJSON = async (url, options = {}) => {
@@ -89,8 +91,24 @@ export const apiService = {
       body: JSON.stringify({ productId, quantity }),
     }),
 
+  updateCartItem: (productId, quantity) =>
+    fetchJSON(`${API_BASE}/cart/${productId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({ quantity }),
+    }),
+
   removeFromCart: (productId) =>
     fetchJSON(`${API_BASE}/cart/${productId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  clearCart: () =>
+    fetchJSON(`${API_BASE}/cart`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),

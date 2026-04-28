@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import Cart from '../models/Cart.js';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -15,13 +14,8 @@ export const register = async (req, res) => {
     let { name, email, password } = req.body;
     email = email?.toLowerCase();
 
-    // Create user
+    // Create user (cart is auto-created via userSchema.post('save') middleware)
     const user = await User.create({ name, email, password });
-
-    // Create cart and link to user
-    const cart = await Cart.create({ user: user._id, items: [] });
-    user.cart = cart._id;
-    await user.save();
 
     res.status(201).json({
       success: true,
@@ -31,7 +25,6 @@ export const register = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        cart: user.cart,
       },
     });
   } catch (error) {
@@ -82,7 +75,6 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        cart: user.cart,
       },
     });
   } catch (error) {
@@ -118,7 +110,6 @@ export const getMe = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        cart: user.cart,
       },
     });
   } catch (error) {
@@ -128,7 +119,7 @@ export const getMe = async (req, res) => {
 };
 
 /* =========================
-   @desc    Get user profile with populated cart
+   @desc    Get user profile
    @route   GET /api/auth/profile
 ========================= */
 export const getProfile = async (req, res) => {
@@ -142,12 +133,7 @@ export const getProfile = async (req, res) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded.id)
-      .select('-password')
-      .populate({
-        path: 'cart',
-        populate: { path: 'items.product' },
-      });
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
       return res.status(401).json({ message: 'User not found' });

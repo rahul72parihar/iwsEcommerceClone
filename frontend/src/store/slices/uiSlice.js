@@ -20,7 +20,8 @@ const loadCart = createAsyncThunk(
       if (!response.ok) return rejectWithValue('Failed to load cart');
 
       const data = await response.json();
-      const count = data.cart?.length || data.length || 0;
+      // Backend returns { status, cart: { items: [...], user: {...} } }
+      const count = data.cart?.items?.length || data.items?.length || 0;
       dispatch(setCartCount(count));
       return count;
     } catch (error) {
