@@ -25,7 +25,9 @@
   margin: 0 auto;
   padding: 32px 24px;
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   background: var(--color-bg);
   min-height: 100vh;
 }
@@ -60,11 +62,19 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media screen and (min-width: 786px) {
+  .admin-nav-cards {
+    justify-content: flex-start;
+  }
 }
 
 .admin-nav-card {
   display: inline-flex;
   align-items: center;
+  width: 120px;
   gap: 8px;
   padding: 12px 20px;
   border-radius: var(--radius-sm);
@@ -110,7 +120,9 @@
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   outline: none;
   box-sizing: border-box;
 }
@@ -277,7 +289,9 @@ input[type="checkbox"] {
   background: var(--color-surface);
   color: var(--color-text);
   outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .search-input:focus {
@@ -342,7 +356,9 @@ input[type="checkbox"] {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   box-sizing: border-box;
 }
 
@@ -467,7 +483,7 @@ input[type="checkbox"] {
   color: var(--color-text-secondary);
 }
 
-.banner-preview > img{
+.banner-preview > img {
   margin-top: 10px;
   width: 100px;
 }
@@ -514,4 +530,3 @@ input[type="checkbox"] {
     height: 32px;
   }
 }
-
