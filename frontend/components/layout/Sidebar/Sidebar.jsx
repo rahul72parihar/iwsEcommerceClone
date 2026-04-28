@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar, closeSidebar, setCartCount } from "../../../src/store/slices/uiSlice";
+import {
+  toggleSidebar,
+  closeSidebar,
+  setCartCount,
+} from "../../../src/store/slices/uiSlice";
 import { logout } from "../../../src/store/slices/authSlice";
 import { Link } from "react-router-dom";
 
@@ -32,9 +36,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Overlay */}
-      {isOpen && (
-        <div className="sidebarOverlay" onClick={handleClose} />
-      )}
+      {isOpen && <div className="sidebarOverlay" onClick={handleClose} />}
 
       {/* Sidebar */}
       <div className={`sidebar ${isOpen ? "active" : ""}`}>
@@ -47,12 +49,42 @@ export default function Sidebar() {
           <div className="sidebar-section">
             <h3>Shop by Category</h3>
             <ul className="category-list">
-              <li><Link to="/men" onClick={handleClose}>MEN</Link></li>
-              <li><Link to="/women" onClick={handleClose}>WOMEN</Link></li>
-              <li><Link to="/shoes" onClick={handleClose}>SHOES</Link></li>
-              {isAdmin && <li><Link to="/admin" onClick={handleClose}>Manage Products</Link></li>}
-              {isAdmin && <li><Link to="/admin/banners" onClick={handleClose}>Manage Banners</Link></li>}
-              {isAdmin && <li><Link to="/admin/orders" onClick={handleClose}>Manage Orders</Link></li>}
+              <li>
+                <Link to="/men" onClick={handleClose}>
+                  MEN
+                </Link>
+              </li>
+              <li>
+                <Link to="/women" onClick={handleClose}>
+                  WOMEN
+                </Link>
+              </li>
+              <li>
+                <Link to="/shoes" onClick={handleClose}>
+                  SHOES
+                </Link>
+              </li>
+              {isAdmin && (
+                <li>
+                  <Link to="/admin" onClick={handleClose}>
+                    Manage Products
+                  </Link>
+                </li>
+              )}
+              {isAdmin && (
+                <li>
+                  <Link to="/admin/banners" onClick={handleClose}>
+                    Manage Banners
+                  </Link>
+                </li>
+              )}
+              {isAdmin && (
+                <li>
+                  <Link to="/admin/orders" onClick={handleClose}>
+                    Manage Orders
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -62,11 +94,9 @@ export default function Sidebar() {
               Cart ({cartItems})
             </Link>
           </div>
-          <div className="sidebar-section">
-            <Link to="/profile" onClick={handleClose}>
-              Profile
-            </Link>
-          </div>
+          <Link to="/profile" onClick={handleClose}>
+            <div className="sidebar-section">Profile</div>
+          </Link>
 
           {/* Auth Section */}
           <div className="sidebar-section">
@@ -75,18 +105,19 @@ export default function Sidebar() {
                 Sign In
               </Link>
             ) : (
-              <button className="logout-btn" onClick={() => {
-                dispatch(logout());
-                handleClose();
-              }}>
+              <button
+                className="logout-btn"
+                onClick={() => {
+                  dispatch(logout());
+                  handleClose();
+                }}
+              >
                 Sign Out
               </button>
             )}
           </div>
         </div>
-
       </div>
     </>
   );
 }
-
