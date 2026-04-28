@@ -29,7 +29,7 @@
 
 .productImage {
   width: 100%;
-  height: 220px;   /* ↓ reduced from 260 */
+  aspect-ratio: 1/1;   /* ↓ reduced from 260 */
   background: #f3f3f3;
 }
 
