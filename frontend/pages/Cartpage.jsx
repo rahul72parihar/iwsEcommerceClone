@@ -9,6 +9,7 @@ export default function Cartpage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingItemId, setProcessingItemId] = useState(null);
   const token = useSelector((state) => state.auth?.token);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ export default function Cartpage() {
     if (newQuantity < 1 || isProcessing) return;
 
     setIsProcessing(true);
+    setProcessingItemId(productId);
     try {
       const result = await apiService.updateCartItem(productId, newQuantity);
       if (result.status === 'success') {
@@ -52,6 +54,7 @@ export default function Cartpage() {
       console.error('Update quantity error:', err);
     } finally {
       setIsProcessing(false);
+      setProcessingItemId(null);
     }
   };
 
@@ -115,7 +118,7 @@ export default function Cartpage() {
                       disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) - 1)}
                     >
-                      {isProcessing ? '...' : '-'}
+                      {processingItemId === item.product?._id ? '...' : '-'}
                     </button>
                     <span className="quantity">{item.quantity || 1}</span>
                     <button
@@ -123,7 +126,7 @@ export default function Cartpage() {
                       disabled={isProcessing}
                       onClick={() => updateQuantity(item.product?._id, item.quantity || 1, (item.quantity || 1) + 1)}
                     >
-                      {isProcessing ? '...' : '+'}
+                      {processingItemId === item.product?._id ? '...' : '+'}
                     </button>
                   </div>
                   <button

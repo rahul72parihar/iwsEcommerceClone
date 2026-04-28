@@ -7,259 +7,348 @@ import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Middleware for admin only
+/* =========================
+   ASYNC HANDLER
+========================= */
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+/* =========================
+   ADMIN MIDDLEWARE (FIXED)
+========================= */
 const requireAdmin = (req, res, next) => {
-  if (!req.isAdmin) {
-    return res.status(403).json({ message: 'Admin access required' });
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Admin access required'
+    });
   }
   next();
 };
 
-// @desc Get all products for admin
-router.get('/products', auth, requireAdmin, async (req, res) => {
-  try {
-    const products = await Product.find({}).sort({ createdAt: -1 });
-    res.json({ status: 'success', data: products });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+/* =========================
+   PRODUCT ROUTES
+========================= */
+
+// Get all products
+router.get('/products', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    data: products
+  });
+}));
+
+// Toggle trending
+router.patch('/products/:id/toggle-trending', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return res.status(404).json({
+      success: false,
+      message: 'Product not found'
+    });
   }
-});
 
-// @desc Toggle product trending
-router.patch('/products/:id/toggle-trending', auth, requireAdmin, async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    product.trending = !product.trending;
-    await product.save();
-    res.json({ status: 'success', data: product });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  product.trending = !product.trending;
+  await product.save();
+
+  res.status(200).json({
+    success: true,
+    data: product
+  });
+}));
+
+// Update product
+router.put('/products/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return res.status(404).json({
+      success: false,
+      message: 'Product not found'
+    });
   }
-});
 
-// @desc Update product
-router.put('/products/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    Object.assign(product, req.body);
-    await product.save();
-    res.json({ status: 'success', data: product });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  Object.assign(product, req.body);
+  await product.save();
+
+  res.status(200).json({
+    success: true,
+    data: product
+  });
+}));
+
+// Create product
+router.post('/addProduct', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const product = new Product(req.body);
+  await product.save();
+
+  res.status(201).json({
+    success: true,
+    data: product
+  });
+}));
+
+// Delete product
+router.delete('/products/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+
+  if (!product) {
+    return res.status(404).json({
+      success: false,
+      message: 'Product not found'
+    });
   }
-});
 
-// @desc Create new product
-router.post('/addProduct', auth, requireAdmin, async (req, res) => {
-  try {
-    const product = new Product(req.body);
-    await product.save();
-    res.status(201).json({ status: 'success', data: product });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  res.status(200).json({
+    success: true,
+    message: 'Product deleted'
+  });
+}));
+
+/* =========================
+   BANNER ROUTES
+========================= */
+
+// Get banners
+router.get('/banners', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const pageBanners = await PageBanner.find({}).sort({ page: 1 });
+
+  res.status(200).json({
+    success: true,
+    data: pageBanners
+  });
+}));
+
+// Add banner
+router.post('/banners', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { page, title, image, link, order, isActive } = req.body;
+
+  let pageBanner = await PageBanner.findOne({ page });
+
+  if (!pageBanner) {
+    pageBanner = new PageBanner({ page, banners: [] });
   }
-});
 
-// @desc Delete product
-router.delete('/products/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    await Product.findByIdAndDelete(req.params.id);
-    res.json({ status: 'success', message: 'Product deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  pageBanner.banners.push({ title, image, link, order, isActive });
+  await pageBanner.save();
+
+  res.status(201).json({
+    success: true,
+    data: pageBanner
+  });
+}));
+
+// Update banner
+router.put('/banners/:page/:index', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { page, index } = req.params;
+
+  const pageBanner = await PageBanner.findOne({ page });
+
+  if (!pageBanner || !pageBanner.banners[index]) {
+    return res.status(404).json({
+      success: false,
+      message: 'Banner not found'
+    });
   }
-});
 
-// @desc Get all banners for admin
-router.get('/banners', auth, requireAdmin, async (req, res) => {
-  try {
-    const pageBanners = await PageBanner.find({}).sort({ page: 1 });
-    res.json({ status: 'success', data: pageBanners });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  Object.assign(pageBanner.banners[index], req.body);
+  await pageBanner.save();
+
+  res.status(200).json({
+    success: true,
+    data: pageBanner
+  });
+}));
+
+// Toggle banner
+router.patch('/banners/:page/:index/toggle', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { page, index } = req.params;
+
+  const pageBanner = await PageBanner.findOne({ page });
+
+  if (!pageBanner || !pageBanner.banners[index]) {
+    return res.status(404).json({
+      success: false,
+      message: 'Banner not found'
+    });
   }
-});
 
-// @desc Add a banner to a page
-router.post('/banners', auth, requireAdmin, async (req, res) => {
-  try {
-    const { page, title, image, link, order, isActive } = req.body;
-    let pageBanner = await PageBanner.findOne({ page });
-    if (!pageBanner) {
-      pageBanner = new PageBanner({ page, banners: [] });
-    }
-    pageBanner.banners.push({ title, image, link, order, isActive });
-    await pageBanner.save();
-    res.status(201).json({ status: 'success', data: pageBanner });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  pageBanner.banners[index].isActive = !pageBanner.banners[index].isActive;
+  await pageBanner.save();
+
+  res.status(200).json({
+    success: true,
+    data: pageBanner
+  });
+}));
+
+// Delete banner
+router.delete('/banners/:page/:index', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { page, index } = req.params;
+
+  const pageBanner = await PageBanner.findOne({ page });
+
+  if (!pageBanner || !pageBanner.banners[index]) {
+    return res.status(404).json({
+      success: false,
+      message: 'Banner not found'
+    });
   }
-});
 
-// @desc Update a banner
-router.put('/banners/:page/:index', auth, requireAdmin, async (req, res) => {
-  try {
-    const { page, index } = req.params;
-    const pageBanner = await PageBanner.findOne({ page });
-    if (!pageBanner || !pageBanner.banners[index]) {
-      return res.status(404).json({ message: 'Banner not found' });
-    }
-    Object.assign(pageBanner.banners[index], req.body);
-    await pageBanner.save();
-    res.json({ status: 'success', data: pageBanner });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  pageBanner.banners.splice(index, 1);
+  await pageBanner.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Banner deleted'
+  });
+}));
+
+/* =========================
+   CATEGORY ROUTES
+========================= */
+
+router.get('/categories', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const categories = await Category.find({}).sort({ name: 1 });
+  const subcategories = await Subcategory.find({}).populate('category', 'name');
+
+  const data = categories.map(cat => ({
+    ...cat.toObject(),
+    subcategories: subcategories.filter(
+      sub => sub.category && sub.category._id.toString() === cat._id.toString()
+    )
+  }));
+
+  res.status(200).json({
+    success: true,
+    data
+  });
+}));
+
+router.post('/categories', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { name } = req.body;
+
+  const category = new Category({ name: name.toUpperCase() });
+  await category.save();
+
+  res.status(201).json({
+    success: true,
+    data: category
+  });
+}));
+
+router.put('/categories/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+
+  if (!category) {
+    return res.status(404).json({
+      success: false,
+      message: 'Category not found'
+    });
   }
-});
 
-// @desc Toggle banner active status
-router.patch('/banners/:page/:index/toggle', auth, requireAdmin, async (req, res) => {
-  try {
-    const { page, index } = req.params;
-    const pageBanner = await PageBanner.findOne({ page });
-    if (!pageBanner || !pageBanner.banners[index]) {
-      return res.status(404).json({ message: 'Banner not found' });
-    }
-    pageBanner.banners[index].isActive = !pageBanner.banners[index].isActive;
-    await pageBanner.save();
-    res.json({ status: 'success', data: pageBanner });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (req.body.name) category.name = req.body.name.toUpperCase();
+
+  await category.save();
+
+  res.status(200).json({
+    success: true,
+    data: category
+  });
+}));
+
+router.delete('/categories/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+
+  if (!category) {
+    return res.status(404).json({
+      success: false,
+      message: 'Category not found'
+    });
   }
-});
 
-// @desc Delete a banner
-router.delete('/banners/:page/:index', auth, requireAdmin, async (req, res) => {
-  try {
-    const { page, index } = req.params;
-    const pageBanner = await PageBanner.findOne({ page });
-    if (!pageBanner || !pageBanner.banners[index]) {
-      return res.status(404).json({ message: 'Banner not found' });
-    }
-    pageBanner.banners.splice(index, 1);
-    await pageBanner.save();
-    res.json({ status: 'success', message: 'Banner deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  await Subcategory.deleteMany({ category: category._id });
+  await Category.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({
+    success: true,
+    message: 'Category and its subcategories deleted'
+  });
+}));
+
+/* =========================
+   SUBCATEGORY ROUTES
+========================= */
+
+router.get('/subcategories', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const subcategories = await Subcategory.find({})
+    .populate('category', 'name')
+    .sort({ name: 1 });
+
+  res.status(200).json({
+    success: true,
+    data: subcategories
+  });
+}));
+
+router.post('/subcategories', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const { name, category } = req.body;
+
+  const subcategory = new Subcategory({ name, category });
+  await subcategory.save();
+
+  const populated = await Subcategory.findById(subcategory._id)
+    .populate('category', 'name');
+
+  res.status(201).json({
+    success: true,
+    data: populated
+  });
+}));
+
+router.put('/subcategories/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const subcategory = await Subcategory.findById(req.params.id);
+
+  if (!subcategory) {
+    return res.status(404).json({
+      success: false,
+      message: 'Subcategory not found'
+    });
   }
-});
 
-// ========================
-// CATEGORY ADMIN ENDPOINTS
-// ========================
+  if (req.body.name) subcategory.name = req.body.name;
+  if (req.body.category) subcategory.category = req.body.category;
 
-// @desc Get all categories (with subcategories populated)
-router.get('/categories', auth, requireAdmin, async (req, res) => {
-  try {
-    const categories = await Category.find({}).sort({ name: 1 });
-    const subcategories = await Subcategory.find({}).populate('category', 'name');
-    const data = categories.map(cat => ({
-      ...cat.toObject(),
-      subcategories: subcategories.filter(sub => sub.category && sub.category._id.toString() === cat._id.toString())
-    }));
-    res.json({ status: 'success', data });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  await subcategory.save();
+
+  const populated = await Subcategory.findById(subcategory._id)
+    .populate('category', 'name');
+
+  res.status(200).json({
+    success: true,
+    data: populated
+  });
+}));
+
+router.delete('/subcategories/:id', auth, requireAdmin, asyncHandler(async (req, res) => {
+  const subcategory = await Subcategory.findById(req.params.id);
+
+  if (!subcategory) {
+    return res.status(404).json({
+      success: false,
+      message: 'Subcategory not found'
+    });
   }
-});
 
-// @desc Create category
-router.post('/categories', auth, requireAdmin, async (req, res) => {
-  try {
-    const { name } = req.body;
-    const category = new Category({ name: name.toUpperCase() });
-    await category.save();
-    res.status(201).json({ status: 'success', data: category });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+  await Subcategory.findByIdAndDelete(req.params.id);
 
-// @desc Update category
-router.put('/categories/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    const category = await Category.findById(req.params.id);
-    if (!category) return res.status(404).json({ message: 'Category not found' });
-    if (req.body.name) category.name = req.body.name.toUpperCase();
-    await category.save();
-    res.json({ status: 'success', data: category });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// @desc Delete category (cascade delete subcategories)
-router.delete('/categories/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    const category = await Category.findById(req.params.id);
-    if (!category) return res.status(404).json({ message: 'Category not found' });
-    await Subcategory.deleteMany({ category: category._id });
-    await Category.findByIdAndDelete(req.params.id);
-    res.json({ status: 'success', message: 'Category and its subcategories deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// ============================
-// SUBCATEGORY ADMIN ENDPOINTS
-// ============================
-
-// @desc Get all subcategories
-router.get('/subcategories', auth, requireAdmin, async (req, res) => {
-  try {
-    const subcategories = await Subcategory.find({}).populate('category', 'name').sort({ name: 1 });
-    res.json({ status: 'success', data: subcategories });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// @desc Create subcategory
-router.post('/subcategories', auth, requireAdmin, async (req, res) => {
-  try {
-    const { name, category } = req.body;
-    const subcategory = new Subcategory({ name, category });
-    await subcategory.save();
-    const populated = await Subcategory.findById(subcategory._id).populate('category', 'name');
-    res.status(201).json({ status: 'success', data: populated });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// @desc Update subcategory
-router.put('/subcategories/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    const subcategory = await Subcategory.findById(req.params.id);
-    if (!subcategory) return res.status(404).json({ message: 'Subcategory not found' });
-    if (req.body.name) subcategory.name = req.body.name;
-    if (req.body.category) subcategory.category = req.body.category;
-    await subcategory.save();
-    const populated = await Subcategory.findById(subcategory._id).populate('category', 'name');
-    res.json({ status: 'success', data: populated });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// @desc Delete subcategory
-router.delete('/subcategories/:id', auth, requireAdmin, async (req, res) => {
-  try {
-    const subcategory = await Subcategory.findById(req.params.id);
-    if (!subcategory) return res.status(404).json({ message: 'Subcategory not found' });
-    await Subcategory.findByIdAndDelete(req.params.id);
-    res.json({ status: 'success', message: 'Subcategory deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+  res.status(200).json({
+    success: true,
+    message: 'Subcategory deleted'
+  });
+}));
 
 export default router;
-
