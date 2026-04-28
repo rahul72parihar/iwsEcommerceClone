@@ -270,6 +270,32 @@ router.delete('/categories/:id', auth, requireAdmin, asyncHandler(async (req, re
     });
   }
 
+   const categoryProducts = await Product.findOne({ category: req.params.id });
+
+  if (categoryProducts) {
+    return res.status(400).json({
+      success: false,
+      message: 'Cannot delete: Category has products'
+    });
+  }
+
+  // 2. Get all subcategories
+  const subcategories = await Subcategory.find({ category: categoryId });
+
+  const subcategoryIds = subcategories.map(sub => sub._id);
+
+  // 3. Check products in subcategories
+  const subcategoryProducts = await Product.findOne({
+    subcategory: { $in: subcategoryIds }
+  });
+
+  if (subcategoryProducts) {
+    return res.status(400).json({
+      success: false,
+      message: 'Cannot delete: Subcategories contain products'
+    });
+  }
+
   await Subcategory.deleteMany({ category: category._id });
   await Category.findByIdAndDelete(req.params.id);
 
@@ -342,6 +368,16 @@ router.delete('/subcategories/:id', auth, requireAdmin, asyncHandler(async (req,
       message: 'Subcategory not found'
     });
   }
+
+  const existingProduct = await Product.findOne({ subcategory: req.params.id });
+
+  if (existingProduct) {
+    return res.status(400).json({
+      success: false,
+      message: 'Cannot delete: Subcategory has products'
+    });
+  }
+
 
   await Subcategory.findByIdAndDelete(req.params.id);
 
