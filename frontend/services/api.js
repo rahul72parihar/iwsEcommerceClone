@@ -253,9 +253,26 @@ export const apiService = {
       body: JSON.stringify(data),
     }),
 
-  adminDeleteSubcategory: (id) =>
+adminDeleteSubcategory: (id) =>
     fetchJSON(`${API_BASE}/admin/subcategories/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+    
+  // Checkout endpoints
+  createCheckout: () =>
+    fetchJSON(`${API_BASE}/checkout`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+
+  verifyPayment: (paymentData) =>
+    fetchJSON(`${API_BASE}/checkout/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(paymentData),
     }),
 };
