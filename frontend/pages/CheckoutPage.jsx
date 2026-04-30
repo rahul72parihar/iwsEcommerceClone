@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.js';
@@ -26,7 +26,7 @@ export default function CheckoutPage() {
     };
   }, []);
 
-  // Create checkout order on load
+// Create checkout order on load
   const createCheckoutOrder = useCallback(async () => {
     if (!token) {
       navigate('/login');
@@ -41,6 +41,7 @@ export default function CheckoutPage() {
       
       if (result.status === 'success' && result.data) {
         setOrderData(result.data);
+        console.log('Checkout order created:', result.data);
       } else {
         setError(result.data?.message || 'Failed to create order');
       }
@@ -52,13 +53,18 @@ export default function CheckoutPage() {
     }
   }, [token, navigate]);
 
+  // Track if checkout order has been created
+  const orderCreated = useRef(false);
+
   useEffect(() => {
-    if (token) {
+    // Prevent creating multiple orders
+    if (token && !orderCreated.current) {
+      orderCreated.current = true;
       createCheckoutOrder();
-    } else {
+    } else if (!token) {
       navigate('/login');
     }
-  }, [token, createCheckoutOrder, navigate]);
+  }, [token, navigate]);
 
   // Initialize Razorpay checkout
   const initRazorpayCheckout = useCallback(() => {
@@ -169,14 +175,27 @@ export default function CheckoutPage() {
     );
   }
 
-  return (
+return (
     <div className="checkout-page">
       <div className="checkout-content">
         <h1>Checkout</h1>
         
         <div className="checkout-summary">
           <h2>Order Summary</h2>
-          <div className="summary-row">
+          
+          <div className="checkout-items">
+            {orderData?.items?.map((item, index) => (
+              <div key={index} className="checkout-item">
+                <div className="item-info">
+                  <span className="item-name">{item.name}</span>
+                  <span className="item-qty">Qty: {item.quantity}</span>
+                </div>
+                <span className="item-price">₹{(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+          
+          <div className="summary-row total">
             <span>Total Amount:</span>
             <span className="amount">₹{orderData?.amount?.toFixed(2)}</span>
           </div>

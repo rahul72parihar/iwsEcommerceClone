@@ -1,0 +1,62 @@
+.orders-page {
+  padding: 20px;
+}
+
+.order-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.status.pending {
+  background: #facc15;
+}
+
+.status.paid {
+  background: #22c55e;
+  color: white;
+}
+
+.status.failed {
+  background: #ef4444;
+  color: white;
+}
+
+.order-items {
+  margin: 10px 0;
+}
+
+.order-item {
+  font-size: 14px;
+  color: #555;
+}
+
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.error {
+  color: red;
+}

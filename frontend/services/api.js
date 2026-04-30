@@ -1,9 +1,9 @@
 // Production/Dev API base (Render/Netlify vs local)
-const API_BASE = window.API_BASE || 'http://localhost:5000/api';
+const API_BASE = window.API_BASE || "http://localhost:5000/api";
 
 // 🔥 helper to normalize backend responses
 const normalize = (raw) => {
-  if (!raw || typeof raw !== 'object') return raw;
+  if (!raw || typeof raw !== "object") return raw;
   // Cart endpoints now return { status, cart: { items, user, ... } }
   if (raw.cart && Array.isArray(raw.cart.items)) return raw.cart;
   return raw.products || raw.data || raw;
@@ -53,8 +53,7 @@ export const apiService = {
   getProducts: (category, limit = 12) =>
     fetchJSON(`${API_BASE}/products?category=${category}&limit=${limit}`),
 
-  getProduct: (id) =>
-    fetchJSON(`${API_BASE}/products/id/${id}`), // ✅ fixed URL
+  getProduct: (id) => fetchJSON(`${API_BASE}/products/id/${id}`), // ✅ fixed URL
 
   getAllBanners: () => fetchJSON(`${API_BASE}/banners`),
 
@@ -121,36 +120,36 @@ export const apiService = {
 
   adminToggleTrending: (id) =>
     fetchJSON(`${API_BASE}/admin/products/${id}/toggle-trending`, {
-      method: 'PATCH',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}` 
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
     }),
 
   adminUpdateProduct: (id, data) =>
     fetchJSON(`${API_BASE}/admin/products/${id}`, {
-      method: 'PUT',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}` 
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminCreateProduct: (data) =>
     fetchJSON(`${API_BASE}/admin/addProduct`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}` 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminDeleteProduct: (id) =>
     fetchJSON(`${API_BASE}/admin/products/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
@@ -162,36 +161,36 @@ export const apiService = {
 
   adminCreateBanner: (data) =>
     fetchJSON(`${API_BASE}/admin/banners`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminUpdateBanner: (page, index, data) =>
     fetchJSON(`${API_BASE}/admin/banners/${page}/${index}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminToggleBanner: (page, index) =>
     fetchJSON(`${API_BASE}/admin/banners/${page}/${index}/toggle`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
     }),
 
   adminDeleteBanner: (page, index) =>
     fetchJSON(`${API_BASE}/admin/banners/${page}/${index}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
@@ -203,27 +202,27 @@ export const apiService = {
 
   adminCreateCategory: (data) =>
     fetchJSON(`${API_BASE}/admin/categories`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminUpdateCategory: (id, data) =>
     fetchJSON(`${API_BASE}/admin/categories/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminDeleteCategory: (id) =>
     fetchJSON(`${API_BASE}/admin/categories/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
@@ -235,42 +234,50 @@ export const apiService = {
 
   adminCreateSubcategory: (data) =>
     fetchJSON(`${API_BASE}/admin/subcategories`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
   adminUpdateSubcategory: (id, data) =>
     fetchJSON(`${API_BASE}/admin/subcategories/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(data),
     }),
 
-adminDeleteSubcategory: (id) =>
+  adminDeleteSubcategory: (id) =>
     fetchJSON(`${API_BASE}/admin/subcategories/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
-    
+
   // Checkout endpoints
+  getOrderByid: (id) =>
+    fetchJSON(`${API_BASE}/orders/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
+  getMyOrders: () =>
+    fetchJSON(`${API_BASE}/orders/myorders`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }),
   createCheckout: () =>
     fetchJSON(`${API_BASE}/checkout`, {
-      method: 'POST',
+      method: "POST",
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
   verifyPayment: (paymentData) =>
     fetchJSON(`${API_BASE}/checkout/verify`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(paymentData),

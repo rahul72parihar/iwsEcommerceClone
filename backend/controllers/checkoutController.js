@@ -1,8 +1,8 @@
-import Razorpay from 'razorpay';
-import crypto from 'crypto';
-import Cart from '../models/Cart.js';
-import Product from '../models/Product.js';
-import Order from '../models/Orders.js';
+import Razorpay from "razorpay";
+import crypto from "crypto";
+import Cart from "../models/Cart.js";
+import Product from "../models/Product.js";
+import Order from "../models/Orders.js";
 
 // Lazy initialization of Razorpay client
 let razorpayInstance = null;
@@ -21,10 +21,10 @@ export const createCheckout = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const cartItems = await Cart.find({ user: userId }).populate('product');
+    const cartItems = await Cart.find({ user: userId }).populate("product");
 
     if (!cartItems.length) {
-      return res.status(400).json({ message: 'Cart is empty' });
+      return res.status(400).json({ message: "Cart is empty" });
     }
 
     let total = 0;
@@ -53,14 +53,38 @@ export const createCheckout = async (req, res) => {
 
     if (!validItems.length) {
       return res.status(400).json({
-        message: 'No valid products in cart',
+        message: "No valid products in cart",
       });
     }
 
-// 3. create razorpay order
+    // Check for existing pending order with same items
+    const existingOrder = await Order.findOne({
+      user: userId,
+      status: "pending",
+    });
+
+    const isSameItems =
+      existingOrder &&
+      JSON.stringify(existingOrder.items) === JSON.stringify(validItems);
+
+    if (isSameItems) {
+      return res.json({
+        success: true,
+        orderId: existingOrder.razorpayOrderId,
+        amount: existingOrder.total,
+        dbOrderId: existingOrder._id,
+        keyId: process.env.RAZORPAY_KEY_ID,
+        items: validItems,
+      });
+    }
+
+    // Delete any existing pending orders for this user
+    await Order.deleteMany({ user: userId, status: "pending" });
+
+    // 3. create razorpay order
     const razorpayOrder = await getRazorpay().orders.create({
       amount: total * 100, // INR → paise
-      currency: 'INR',
+      currency: "INR",
       receipt: `receipt_${Date.now()}`,
     });
 
@@ -70,21 +94,21 @@ export const createCheckout = async (req, res) => {
       items: validItems,
       total,
       razorpayOrderId: razorpayOrder.id,
-      status: 'pending',
+      status: "pending",
     });
 
-// 5. send response to frontend
+    // 5. send response to frontend
     res.json({
       success: true,
       orderId: razorpayOrder.id,
       amount: total,
       dbOrderId: order._id,
       keyId: process.env.RAZORPAY_KEY_ID,
+      items: validItems,
     });
-
   } catch (error) {
-    console.error('Checkout error:', error);
-    res.status(500).json({ message: 'Checkout failed' });
+    console.error("Checkout error:", error);
+    res.status(500).json({ message: "Checkout failed" });
   }
 };
 
@@ -92,30 +116,36 @@ export const verifyPayment = async (req, res) => {
   try {
     const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
 
-// Verify the payment signature
-    const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpayOrderId + '|' + razorpayPaymentId)
-      .digest('hex');
+    // Verify the payment signature
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(razorpayOrderId + "|" + razorpayPaymentId)
+      .digest("hex");
 
     if (generatedSignature !== razorpaySignature) {
-      return res.status(400).json({ success: false, message: 'Invalid signature' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid signature" });
     }
 
     // Update order status to paid
     const order = await Order.findOne({ razorpayOrderId });
     if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
 
-    order.status = 'paid';
+    order.status = "paid";
     order.razorpayPaymentId = razorpayPaymentId;
     order.paidAt = new Date();
     await order.save();
 
-    res.json({ success: true, message: 'Payment verified successfully' });
-
+    res.json({ success: true, message: "Payment verified successfully" });
   } catch (error) {
-    console.error('Payment verification error:', error);
-    res.status(500).json({ success: false, message: 'Payment verification failed' });
+    console.error("Payment verification error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Payment verification failed" });
   }
 };
