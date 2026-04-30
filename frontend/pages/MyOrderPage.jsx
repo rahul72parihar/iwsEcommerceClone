@@ -63,7 +63,7 @@ export default function MyOrders() {
 
   return (
     <div className="orders-page">
-      <h1>My Orders</h1>
+      <h1 className='orders-page-heading'>My Orders</h1>
 
       {orders.length === 0 ? (
         <p>No orders found</p>

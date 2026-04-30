@@ -2,9 +2,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.js';
+import { setCartCount } from '../src/store/slices/uiSlice.js';
 import '../styles/CheckoutPage.css';
 
 export default function CheckoutPage() {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [orderData, setOrderData] = useState(null);
@@ -158,6 +160,7 @@ export default function CheckoutPage() {
   }
 
   if (paymentSuccess) {
+    dispatch(setCartCount(0));
     return (
       <div className="checkout-page">
         <div className="checkout-success">
