@@ -181,7 +181,7 @@ export default function CheckoutPage() {
 return (
     <div className="checkout-page">
       <div className="checkout-content">
-        <h1>Checkout</h1>
+        <h2>Checkout</h2>
         
         <div className="checkout-summary">
           <h2>Order Summary</h2>
