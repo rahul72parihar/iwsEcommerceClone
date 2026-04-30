@@ -1,5 +1,4 @@
-import Order from '../models/Order.js';
-
+import Order from '../models/Orders.js';
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id })
