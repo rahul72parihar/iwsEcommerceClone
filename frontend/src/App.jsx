@@ -29,6 +29,7 @@ import AdminCategoriesPage from "../pages/AdminCategoriesPage";
 import { loadUser } from "./store/slices/authSlice";
 import { loadCart } from "./store/slices/uiSlice";
 import MyOrders from "../pages/MyOrderPage";
+import OrderDetailPage from "../pages/OrderDetailPage";
 
 
 
@@ -88,7 +89,8 @@ useEffect(() => {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/myorders" element={<MyOrders />} />
+<Route path="/myorders" element={<MyOrders />} />
+<Route path="/myorders/:id" element={<OrderDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/banners" element={<AdminBannerPage />} />
         <Route path="/admin/orders" element={<AdminOrdersPage />} />

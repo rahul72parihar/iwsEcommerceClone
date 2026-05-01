@@ -3,6 +3,7 @@ import crypto from "crypto";
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 import Order from "../models/Orders.js";
+import OrderItem from "../models/OrderItem.js";
 
 // Lazy initialization of Razorpay client
 let razorpayInstance = null;
@@ -35,7 +36,7 @@ export const createCheckout = async (req, res) => {
 
       if (!product) continue;
 
-      if (product.countInStock < item.quantity) {
+if (product.countInStock < item.quantity) {
         return res.status(400).json({
           message: `${product.title} is out of stock`,
         });
@@ -48,33 +49,13 @@ export const createCheckout = async (req, res) => {
         name: product.title,
         price: product.price,
         quantity: item.quantity,
+        image: product.image,
       });
     }
 
     if (!validItems.length) {
       return res.status(400).json({
         message: "No valid products in cart",
-      });
-    }
-
-    // Check for existing pending order with same items
-    const existingOrder = await Order.findOne({
-      user: userId,
-      status: "pending",
-    });
-
-    const isSameItems =
-      existingOrder &&
-      JSON.stringify(existingOrder.items) === JSON.stringify(validItems);
-
-    if (isSameItems) {
-      return res.json({
-        success: true,
-        orderId: existingOrder.razorpayOrderId,
-        amount: existingOrder.total,
-        dbOrderId: existingOrder._id,
-        keyId: process.env.RAZORPAY_KEY_ID,
-        items: validItems,
       });
     }
 
@@ -88,23 +69,44 @@ export const createCheckout = async (req, res) => {
       receipt: `receipt_${Date.now()}`,
     });
 
-    // 4. save order in DB (PENDING)
+    // 4. save order in DB (PENDING) - first create order without items
     const order = await Order.create({
       user: userId,
-      items: validItems,
+      items: [],
       total,
       razorpayOrderId: razorpayOrder.id,
       status: "pending",
     });
 
-    // 5. send response to frontend
+    // 5. Create OrderItem documents and link them to the order
+    const orderItemIds = [];
+    for (const item of validItems) {
+      const orderItem = await OrderItem.create({
+        order: order._id,
+        product: item.product,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      });
+      orderItemIds.push(orderItem._id);
+    }
+
+    // 6. Update order with the OrderItem references
+    order.items = orderItemIds;
+    await order.save();
+
+    // 7. Fetch the order with populated items to send back to frontend
+    const createdOrder = await Order.findById(order._id).populate('items');
+
+    // 8. send response to frontend
     res.json({
       success: true,
       orderId: razorpayOrder.id,
       amount: total,
       dbOrderId: order._id,
       keyId: process.env.RAZORPAY_KEY_ID,
-      items: validItems,
+      items: createdOrder.items,
     });
   } catch (error) {
     console.error("Checkout error:", error);

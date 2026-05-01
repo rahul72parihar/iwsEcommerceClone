@@ -1,29 +1,5 @@
 import mongoose from 'mongoose';
 
-const orderItemSchema = new mongoose.Schema(
-  {
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-  },
-  { _id: false }
-);
-
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -32,7 +8,12 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
-    items: [orderItemSchema],
+    items: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OrderItem',
+      },
+    ],
 
     total: {
       type: Number,

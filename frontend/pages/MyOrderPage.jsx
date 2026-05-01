@@ -69,10 +69,10 @@ export default function MyOrders() {
         <p>No orders found</p>
       ) : (
         orders.map((order) => (
-          <div
+<div
             key={order._id}
             className="order-card"
-            onClick={() => navigate(`/order/${order._id}`)}
+            onClick={() => navigate(`/myorders/${order._id}`)}
           >
             <div className="order-header">
               <span>Order ID: {order._id}</span>

@@ -1,9 +1,18 @@
 import Order from '../models/Orders.js';
+import OrderItem from '../models/OrderItem.js';
 
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id })
+      .populate('items')
       .sort({ createdAt: -1 });
+
+    // Also populate product inside each OrderItem
+    for (const order of orders) {
+      for (const item of order.items) {
+        await item.populate('product');
+      }
+    }
 
     res.json(orders);
   } catch (error) {
@@ -14,6 +23,15 @@ export const getMyOrders = async (req, res) => {
 export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
+    .populate('items');
+    console.log("Order ID from params:", req.params.id);
+
+    // Also populate product inside each OrderItem
+    if (order && order.items) {
+      for (const item of order.items) {
+        await item.populate('product');
+      }
+    }
 
     // ❌ Order not found
     if (!order) {

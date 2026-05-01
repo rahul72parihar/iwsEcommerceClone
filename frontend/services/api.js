@@ -258,9 +258,9 @@ export const apiService = {
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
-  // Checkout endpoints
+// Checkout endpoints
   getOrderByid: (id) =>
-    fetchJSON(`${API_BASE}/orders/${id}`, {
+    fetchJSON(`${API_BASE}/orders/myorders/${id}`, {
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
   getMyOrders: () =>
