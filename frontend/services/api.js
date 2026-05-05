@@ -273,10 +273,14 @@ export const apiService = {
     fetchJSON(`${API_BASE}/orders/myorders`, {
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
-  createCheckout: () =>
+  createCheckout: (data) =>
     fetchJSON(`${API_BASE}/checkout`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${getToken()}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(data),
     }),
 
   verifyPayment: (paymentData) =>

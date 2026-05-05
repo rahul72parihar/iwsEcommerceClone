@@ -1,56 +1,35 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-
-    items: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'OrderItem',
-      },
-    ],
-
-    total: {
-      type: Number,
-      required: true,
-    },
-
-    status: {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    items: [{ type: mongoose.Schema.Types.ObjectId, ref: "OrderItem" }],
+    paymentMethod: { type: String, enum: ["online", "cod"], required: true }, // Changed to lowercase to match frontend
+    paymentStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed', 'cancelled'],
-      default: 'pending',
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
     },
-
-    razorpayOrderId: {
+    deliveryStatus: {
       type: String,
-      required: true,
+      enum: ["packing", "shipped", "delivered", "cancelled"],
+      default: "packing",
     },
-
-    razorpayPaymentId: {
-      type: String,
-    },
-
-    paidAt: {
-      type: Date,
-    },
-
+    total: { type: Number, required: true },
+    razorpayOrderId: { type: String }, // Optional for COD
+    razorpayPaymentId: { type: String },
+    paidAt: { type: Date },
     shippingAddress: {
-      address: String,
+      fullName: String,
+      street: String,
       city: String,
-      postalCode: String,
-      country: String,
+      state: String,
+      zipCode: String,
+      phone: String,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true },
 );
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;
