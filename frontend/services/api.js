@@ -73,6 +73,12 @@ export const apiService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     }),
+  googleLogin: (token) =>
+    fetchJSON(`${API_BASE}/auth/google`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    }),
 
   // 🔥 CART (token handled internally)
   getCart: () =>
@@ -258,7 +264,7 @@ export const apiService = {
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
-// Checkout endpoints
+  // Checkout endpoints
   getOrderByid: (id) =>
     fetchJSON(`${API_BASE}/orders/myorders/${id}`, {
       headers: { Authorization: `Bearer ${getToken()}` },

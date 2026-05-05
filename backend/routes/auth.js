@@ -4,11 +4,13 @@ import {
   login,
   getMe,
   getProfile,
+  googleAuth
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
 router.post('/register', register);
+router.post('/google', googleAuth);
 router.post('/login', login);
 router.get('/me', getMe);
 router.get('/profile', getProfile);

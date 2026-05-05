@@ -1,40 +1,59 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../src/store/slices/authSlice';
-import { apiService } from '../services/api.js';
-import '../styles/LoginPage.css';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../src/store/slices/authSlice";
+import { apiService } from "../services/api.js";
+import "../styles/LoginPage.css";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('test@gmail.com');
-  const [password, setPassword] = useState('Test@123');
+  const [email, setEmail] = useState("test@gmail.com");
+  const [password, setPassword] = useState("Test@123");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     const { data, status } = await apiService.login({
       email,
-      password
+      password,
     });
 
-    if (status === 'success') {
+    if (status === "success") {
       const payload = {
         user: data.user,
-        token: data.token
+        token: data.token,
       };
       dispatch(loginSuccess(payload));
-      navigate('/');
+      navigate("/");
     } else {
-      setError(data.message || 'Login failed');
+      setError(data.message || "Login failed");
     }
 
     setIsLoading(false);
+  };
+
+  const handleGoogleSuccess = async (res) => {
+    try {
+      const response = await apiService.googleLogin(res.credential);
+
+      if (response.status === "success") {
+        // ✅ SAME FLOW AS NORMAL LOGIN
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        window.location.href = "/";
+      } else {
+        alert("Google login failed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -74,15 +93,21 @@ export default function LoginPage() {
             </div>
 
             <button type="submit" className="login-button" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? "Signing in..." : "Sign In"}
             </button>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => console.log("Google login error")}
+            />
           </form>
 
           <div className="login-footer">
             <p>Demo login works with any credentials (1.5s delay)</p>
             <p>
-              Don't have an account?{' '}
-              <Link to="/register" className="link">Create Account</Link>
+              Don't have an account?{" "}
+              <Link to="/register" className="link">
+                Create Account
+              </Link>
             </p>
           </div>
         </div>
@@ -90,4 +115,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

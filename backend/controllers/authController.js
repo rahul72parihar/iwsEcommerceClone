@@ -148,4 +148,64 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+// ========================= GOOGLE AUTH (NEW) =========================
+import { OAuth2Client } from 'google-auth-library';
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+export const googleAuth = async (req, res) => {
+  try {
+    const { token } = req.body;
 
+    // ❌ no token → reject
+    if (!token) {
+      return res.status(400).json({ message: "No token provided" });
+    }
+
+    // ✅ verify with Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    const { email, name, picture, sub } = payload;
+
+    // ✅ find user
+    let user = await User.findOne({ email });
+
+    // ✅ create if not exists
+    if (!user) {
+      user = await User.create({
+        email,
+        name,
+        googleId: sub,
+        image: picture,
+      });
+    }
+
+    // ✅ link account if needed
+    if (!user.googleId) {
+      user.googleId = sub;
+      user.image = picture;
+      await user.save();
+    }
+
+    // ✅ generate YOUR token
+    const appToken = generateToken(user._id);
+
+    res.json({
+      status: "success",
+      data: {
+        token: appToken,
+        user,
+      },
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({
+      status: "error",
+      message: "Google authentication failed",
+    });
+  }
+};
