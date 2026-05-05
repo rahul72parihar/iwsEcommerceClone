@@ -83,7 +83,48 @@ router.put('/products/:id', auth, requireAdmin, asyncHandler(async (req, res) =>
 
 // Create product
 router.post('/addProduct', auth, requireAdmin, asyncHandler(async (req, res) => {
-  const product = new Product(req.body);
+  const {
+    id,
+    title,
+    price,
+    image,
+    images,
+    sizes,
+    category,
+    subcategory,
+    description,
+    trending,
+  } = req.body || {};
+
+  const missing = [];
+  if (!id) missing.push('id');
+  if (!title) missing.push('title');
+  if (!price) missing.push('price');
+  if (!image) missing.push('image');
+  if (!category) missing.push('category');
+  if (!subcategory) missing.push('subcategory');
+
+  if (missing.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required fields',
+      missing,
+    });
+  }
+
+  const product = new Product({
+    id,
+    title,
+    price,
+    image,
+    images: images || [],
+    sizes: sizes || [],
+    category,
+    subcategory,
+    description,
+    trending: typeof trending === 'boolean' ? trending : false,
+  });
+
   await product.save();
 
   res.status(201).json({

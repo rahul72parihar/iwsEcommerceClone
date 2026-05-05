@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { FiEdit3, FiTrash2, FiPlus, FiEye, FiEyeOff, FiImage, FiStar, FiLayers } from "react-icons/fi";
+import {
+  FiEdit3,
+  FiTrash2,
+  FiPlus,
+  FiEye,
+  FiEyeOff,
+  FiImage,
+  FiStar,
+  FiLayers,
+} from "react-icons/fi";
 import { apiService } from "../services/api";
 import { addToast } from "../src/store/slices/uiSlice";
 import "../styles/AdminPage.css";
@@ -29,12 +38,15 @@ const AdminBannerPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredBanners = banners.flatMap((pb) =>
-    pb.banners.map((b, idx) => ({ ...b, page: pb.page, index: idx }))
-  ).filter((banner) =>
-    banner.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    banner.page.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBanners = banners
+    .flatMap((pb) =>
+      pb.banners.map((b, idx) => ({ ...b, page: pb.page, index: idx })),
+    )
+    .filter(
+      (banner) =>
+        banner.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        banner.page.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
 
   useEffect(() => {
     if (!token || !isAdmin) {
@@ -42,7 +54,7 @@ const AdminBannerPage = () => {
         addToast({
           type: "error",
           message: "Admin access required. Login as admin.",
-        })
+        }),
       );
       navigate("/login");
       return;
@@ -68,7 +80,9 @@ const AdminBannerPage = () => {
       const response = await apiService.adminToggleBanner(page, index);
       if (response.status === "success") {
         fetchBanners();
-        dispatch(addToast({ type: "success", message: "Banner status updated" }));
+        dispatch(
+          addToast({ type: "success", message: "Banner status updated" }),
+        );
       }
     } catch (error) {
       dispatch(addToast({ type: "error", message: "Failed to update banner" }));
@@ -96,13 +110,46 @@ const AdminBannerPage = () => {
   };
 
   const saveEdit = async () => {
+    const errors = {};
+
+    if (!editForm.title?.trim()) errors.title = "Title is required";
+    if (!editForm.image?.trim()) errors.image = "Image URL is required";
+    if (!editForm.link?.trim()) errors.link = "Link is required";
+    if (editForm.order === undefined || editForm.order === null)
+      errors.order = "Order is required";
+
+    // ❌ If any error → show toast and STOP
+    if (Object.keys(errors).length > 0) {
+      const firstError = Object.values(errors)[0];
+
+      dispatch(
+        addToast({
+          type: "error",
+          message: firstError,
+        }),
+      );
+
+      return;
+    }
+
+    // ✅ If valid → continue API call
     try {
-      const response = await apiService.adminUpdateBanner(editingPage, editingIndex, editForm);
+      const response = await apiService.adminUpdateBanner(
+        editingPage,
+        editingIndex,
+        editForm,
+      );
+
       if (response.status === "success") {
         fetchBanners();
         setEditingPage(null);
         setEditingIndex(null);
+
         dispatch(addToast({ type: "success", message: "Banner updated" }));
+      } else {
+        dispatch(
+          addToast({ type: "error", message: "Failed to update banner" }),
+        );
       }
     } catch (error) {
       dispatch(addToast({ type: "error", message: "Failed to update banner" }));
@@ -165,7 +212,9 @@ const AdminBannerPage = () => {
         </div>
       </div>
 
-      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Banner Management</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        Banner Management
+      </h2>
 
       {/* NEW BANNER FORM */}
       <div className="admin-section">
@@ -175,7 +224,9 @@ const AdminBannerPage = () => {
         <form onSubmit={createBanner} className="admin-form">
           <select
             value={newBannerForm.page}
-            onChange={(e) => setNewBannerForm({ ...newBannerForm, page: e.target.value })}
+            onChange={(e) =>
+              setNewBannerForm({ ...newBannerForm, page: e.target.value })
+            }
           >
             <option value="main">Main</option>
             <option value="men">Men</option>
@@ -185,13 +236,17 @@ const AdminBannerPage = () => {
           <input
             placeholder="Title"
             value={newBannerForm.title}
-            onChange={(e) => setNewBannerForm({ ...newBannerForm, title: e.target.value })}
+            onChange={(e) =>
+              setNewBannerForm({ ...newBannerForm, title: e.target.value })
+            }
             required
           />
           <input
             placeholder="Image URL"
             value={newBannerForm.image}
-            onChange={(e) => setNewBannerForm({ ...newBannerForm, image: e.target.value })}
+            onChange={(e) =>
+              setNewBannerForm({ ...newBannerForm, image: e.target.value })
+            }
             required
           />
           {newBannerForm.image && (
@@ -202,19 +257,31 @@ const AdminBannerPage = () => {
           <input
             placeholder="Link (e.g. /men)"
             value={newBannerForm.link}
-            onChange={(e) => setNewBannerForm({ ...newBannerForm, link: e.target.value })}
+            onChange={(e) =>
+              setNewBannerForm({ ...newBannerForm, link: e.target.value })
+            }
           />
           <input
             type="number"
             placeholder="Order"
             value={newBannerForm.order}
-            onChange={(e) => setNewBannerForm({ ...newBannerForm, order: Number(e.target.value) })}
+            onChange={(e) =>
+              setNewBannerForm({
+                ...newBannerForm,
+                order: Number(e.target.value),
+              })
+            }
           />
           <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <input
               type="checkbox"
               checked={newBannerForm.isActive}
-              onChange={(e) => setNewBannerForm({ ...newBannerForm, isActive: e.target.checked })}
+              onChange={(e) =>
+                setNewBannerForm({
+                  ...newBannerForm,
+                  isActive: e.target.checked,
+                })
+              }
             />
             Active
           </label>
@@ -236,14 +303,18 @@ const AdminBannerPage = () => {
         </div>
         <div className="admin-products">
           {filteredBanners.map((banner) => (
-            <div key={`${banner.page}-${banner.index}`} className="product-card">
+            <div
+              key={`${banner.page}-${banner.index}`}
+              className="product-card"
+            >
               <div className="card-row">
                 <span className="card-label">Page:</span>
                 <span className="card-value">{banner.page}</span>
               </div>
               <div className="card-row">
                 <span className="card-label">Image:</span>
-                {editingPage === banner.page && editingIndex === banner.index ? (
+                {editingPage === banner.page &&
+                editingIndex === banner.index ? (
                   <div className="edit-image-wrap">
                     <input
                       value={editForm.image}
@@ -260,16 +331,23 @@ const AdminBannerPage = () => {
                     )}
                   </div>
                 ) : (
-                  <img src={banner.image} alt={banner.title} className="card-image" />
+                  <img
+                    src={banner.image}
+                    alt={banner.title}
+                    className="card-image"
+                  />
                 )}
               </div>
               <div className="card-row">
                 <span className="card-label">Title:</span>
                 <span className="card-value">
-                  {editingPage === banner.page && editingIndex === banner.index ? (
+                  {editingPage === banner.page &&
+                  editingIndex === banner.index ? (
                     <input
                       value={editForm.title}
-                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, title: e.target.value })
+                      }
                     />
                   ) : (
                     banner.title
@@ -279,10 +357,13 @@ const AdminBannerPage = () => {
               <div className="card-row">
                 <span className="card-label">Link:</span>
                 <span className="card-value">
-                  {editingPage === banner.page && editingIndex === banner.index ? (
+                  {editingPage === banner.page &&
+                  editingIndex === banner.index ? (
                     <input
                       value={editForm.link}
-                      onChange={(e) => setEditForm({ ...editForm, link: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, link: e.target.value })
+                      }
                     />
                   ) : (
                     banner.link
@@ -292,11 +373,17 @@ const AdminBannerPage = () => {
               <div className="card-row">
                 <span className="card-label">Order:</span>
                 <span className="card-value">
-                  {editingPage === banner.page && editingIndex === banner.index ? (
+                  {editingPage === banner.page &&
+                  editingIndex === banner.index ? (
                     <input
                       type="number"
                       value={editForm.order}
-                      onChange={(e) => setEditForm({ ...editForm, order: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          order: Number(e.target.value),
+                        })
+                      }
                     />
                   ) : (
                     banner.order
@@ -306,12 +393,18 @@ const AdminBannerPage = () => {
               <div className="card-row">
                 <span className="card-label">Active:</span>
                 <span className="card-value">
-                  {editingPage === banner.page && editingIndex === banner.index ? (
+                  {editingPage === banner.page &&
+                  editingIndex === banner.index ? (
                     <label className="toggle-label">
                       <input
                         type="checkbox"
                         checked={editForm.isActive}
-                        onChange={(e) => setEditForm({ ...editForm, isActive: e.target.checked })}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            isActive: e.target.checked,
+                          })
+                        }
                       />
                       {editForm.isActive ? "Yes" : "No"}
                     </label>
@@ -320,7 +413,8 @@ const AdminBannerPage = () => {
                       className="trending-toggle"
                       onClick={() => toggleActive(banner.page, banner.index)}
                     >
-                      {banner.isActive ? <FiEye /> : <FiEyeOff />} {banner.isActive ? "Yes" : "No"}
+                      {banner.isActive ? <FiEye /> : <FiEyeOff />}{" "}
+                      {banner.isActive ? "Yes" : "No"}
                     </button>
                   )}
                 </span>
@@ -328,7 +422,8 @@ const AdminBannerPage = () => {
               <div className="card-row">
                 <span className="card-label">Actions:</span>
                 <div className="action-buttons">
-                  {editingPage === banner.page && editingIndex === banner.index ? (
+                  {editingPage === banner.page &&
+                  editingIndex === banner.index ? (
                     <>
                       <button className="save-btn" onClick={saveEdit}>
                         Save
@@ -339,7 +434,10 @@ const AdminBannerPage = () => {
                     </>
                   ) : (
                     <>
-                      <button className="edit-btn" onClick={() => startEdit(banner)}>
+                      <button
+                        className="edit-btn"
+                        onClick={() => startEdit(banner)}
+                      >
                         <FiEdit3 /> Edit
                       </button>
                       <button
@@ -361,4 +459,3 @@ const AdminBannerPage = () => {
 };
 
 export default AdminBannerPage;
-

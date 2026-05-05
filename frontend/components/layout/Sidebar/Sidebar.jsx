@@ -98,6 +98,9 @@ export default function Sidebar() {
           <Link to="/profile" onClick={handleClose}>
             <div className="sidebar-section">Profile</div>
           </Link>
+          <Link to="/myorders" onClick={handleClose}>
+            <div className="sidebar-section">My Orders</div>
+          </Link>
 
           {/* Auth Section */}
           <div className="sidebar-section">

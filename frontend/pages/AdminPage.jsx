@@ -1,7 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { FiEdit3, FiTrash2, FiStar, FiPlus, FiImage, FiLayers } from "react-icons/fi";
+import {
+  FiEdit3,
+  FiTrash2,
+  FiStar,
+  FiPlus,
+  FiImage,
+  FiLayers,
+} from "react-icons/fi";
 import { apiService } from "../services/api";
 import { addToast } from "../src/store/slices/uiSlice";
 import { fetchCatalog } from "../src/store/slices/catalogSlice";
@@ -171,6 +178,28 @@ const AdminPage = () => {
   };
 
   const saveEdit = async (id) => {
+    const errors = {};
+
+    if (!editForm.title?.trim()) errors.title = "Title is required";
+    if (!editForm.price?.toString().trim()) errors.price = "Price is required";
+    if (!editForm.image?.trim()) errors.image = "Main image is required";
+    if (!editForm.category) errors.category = "Category is required";
+    if (!editForm.subcategory) errors.subcategory = "Subcategory is required";
+
+    // ❌ If errors exist → show toast and stop
+    if (Object.keys(errors).length > 0) {
+      const firstError = Object.values(errors)[0];
+
+      dispatch(
+        addToast({
+          type: "error",
+          message: firstError,
+        }),
+      );
+
+      return;
+    }
+
     try {
       const response = await apiService.adminUpdateProduct(id, editForm);
       if (response.status === "success") {
@@ -209,11 +238,17 @@ const AdminPage = () => {
     if (!newProductForm.price.trim()) errors.price = "Price is required";
     if (!newProductForm.image.trim()) errors.image = "Image URL is required";
     if (!newProductForm.category) errors.category = "Category is required";
-    if (!newProductForm.subcategory) errors.subcategory = "Subcategory is required";
+    if (!newProductForm.subcategory)
+      errors.subcategory = "Subcategory is required";
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      dispatch(addToast({ type: "error", message: "Please fill in all required fields" }));
+      dispatch(
+        addToast({
+          type: "error",
+          message: "Please fill in all required fields",
+        }),
+      );
       return;
     }
 
@@ -221,6 +256,7 @@ const AdminPage = () => {
 
     try {
       const response = await apiService.adminCreateProduct(newProductForm);
+
       if (response.status === "success") {
         setProducts([response.data, ...products]);
         setNewProductForm({
@@ -234,7 +270,12 @@ const AdminPage = () => {
           description: "",
         });
         dispatch(addToast({ type: "success", message: "Product created" }));
+        return;
       }
+
+      const message = response?.data?.message || "Failed to create product";
+
+      dispatch(addToast({ type: "error", message }));
     } catch (error) {
       dispatch(
         addToast({ type: "error", message: "Failed to create product" }),
@@ -243,11 +284,14 @@ const AdminPage = () => {
   };
 
   const newFormSubcategories = subcategories.filter(
-    (s) => s.category?._id === newProductForm.category || s.category === newProductForm.category
+    (s) =>
+      s.category?._id === newProductForm.category ||
+      s.category === newProductForm.category,
   );
 
   const editFormSubcategories = subcategories.filter(
-    (s) => s.category?._id === editForm.category || s.category === editForm.category
+    (s) =>
+      s.category?._id === editForm.category || s.category === editForm.category,
   );
 
   if (loading || catalogLoading)
@@ -273,7 +317,9 @@ const AdminPage = () => {
         </div>
       </div>
 
-      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Product Management</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        Product Management
+      </h2>
 
       {/* NEW PRODUCT FORM */}
       <div className="admin-section">
@@ -301,11 +347,14 @@ const AdminPage = () => {
             value={newProductForm.title}
             onChange={(e) => {
               setNewProductForm({ ...newProductForm, title: e.target.value });
-              if (formErrors.title) setFormErrors((prev) => ({ ...prev, title: "" }));
+              if (formErrors.title)
+                setFormErrors((prev) => ({ ...prev, title: "" }));
             }}
             required
           />
-          {formErrors.title && <span className="error-msg">{formErrors.title}</span>}
+          {formErrors.title && (
+            <span className="error-msg">{formErrors.title}</span>
+          )}
 
           <input
             data-label="Price:"
@@ -314,11 +363,14 @@ const AdminPage = () => {
             value={newProductForm.price}
             onChange={(e) => {
               setNewProductForm({ ...newProductForm, price: e.target.value });
-              if (formErrors.price) setFormErrors((prev) => ({ ...prev, price: "" }));
+              if (formErrors.price)
+                setFormErrors((prev) => ({ ...prev, price: "" }));
             }}
             required
           />
-          {formErrors.price && <span className="error-msg">{formErrors.price}</span>}
+          {formErrors.price && (
+            <span className="error-msg">{formErrors.price}</span>
+          )}
 
           <input
             data-label="Image:"
@@ -327,11 +379,14 @@ const AdminPage = () => {
             value={newProductForm.image}
             onChange={(e) => {
               setNewProductForm({ ...newProductForm, image: e.target.value });
-              if (formErrors.image) setFormErrors((prev) => ({ ...prev, image: "" }));
+              if (formErrors.image)
+                setFormErrors((prev) => ({ ...prev, image: "" }));
             }}
             required
           />
-          {formErrors.image && <span className="error-msg">{formErrors.image}</span>}
+          {formErrors.image && (
+            <span className="error-msg">{formErrors.image}</span>
+          )}
 
           {/* Additional Images Section - New Product */}
           <div className="images-section">
@@ -341,9 +396,15 @@ const AdminPage = () => {
                 placeholder="Additional Image URL"
                 value={newImageInput}
                 onChange={(e) => setNewImageInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addNewImage())}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addNewImage())
+                }
               />
-              <button type="button" className="add-image-btn" onClick={addNewImage}>
+              <button
+                type="button"
+                className="add-image-btn"
+                onClick={addNewImage}
+              >
                 <FiPlus /> Add
               </button>
             </div>
@@ -351,13 +412,21 @@ const AdminPage = () => {
               <div className="image-list">
                 {newProductForm.images.map((img, idx) => (
                   <div key={idx} className="image-item">
-                    <img src={img} alt={`Additional ${idx + 1}`} className="image-thumb" />
+                    <img
+                      src={img}
+                      alt={`Additional ${idx + 1}`}
+                      className="image-thumb"
+                    />
                     <input
                       value={img}
                       onChange={(e) => updateNewImage(idx, e.target.value)}
                       placeholder="Image URL"
                     />
-                    <button type="button" className="remove-image-btn" onClick={() => removeNewImage(idx)}>
+                    <button
+                      type="button"
+                      className="remove-image-btn"
+                      onClick={() => removeNewImage(idx)}
+                    >
                       <FiTrash2 />
                     </button>
                   </div>
@@ -371,8 +440,13 @@ const AdminPage = () => {
             className={formErrors.category ? "field-error" : ""}
             value={newProductForm.category}
             onChange={(e) => {
-              setNewProductForm({ ...newProductForm, category: e.target.value, subcategory: "" });
-              if (formErrors.category) setFormErrors((prev) => ({ ...prev, category: "" }));
+              setNewProductForm({
+                ...newProductForm,
+                category: e.target.value,
+                subcategory: "",
+              });
+              if (formErrors.category)
+                setFormErrors((prev) => ({ ...prev, category: "" }));
             }}
             required
           >
@@ -383,21 +457,29 @@ const AdminPage = () => {
               </option>
             ))}
           </select>
-          {formErrors.category && <span className="error-msg">{formErrors.category}</span>}
+          {formErrors.category && (
+            <span className="error-msg">{formErrors.category}</span>
+          )}
 
           <select
             data-label="SubCategory:"
             className={formErrors.subcategory ? "field-error" : ""}
             value={newProductForm.subcategory}
             onChange={(e) => {
-              setNewProductForm({ ...newProductForm, subcategory: e.target.value });
-              if (formErrors.subcategory) setFormErrors((prev) => ({ ...prev, subcategory: "" }));
+              setNewProductForm({
+                ...newProductForm,
+                subcategory: e.target.value,
+              });
+              if (formErrors.subcategory)
+                setFormErrors((prev) => ({ ...prev, subcategory: "" }));
             }}
             required
             disabled={!newProductForm.category}
           >
             <option value="">
-              {newProductForm.category ? "Select Subcategory" : "Choose category first"}
+              {newProductForm.category
+                ? "Select Subcategory"
+                : "Choose category first"}
             </option>
             {newFormSubcategories.map((sub) => (
               <option key={sub._id} value={sub._id}>
@@ -405,7 +487,9 @@ const AdminPage = () => {
               </option>
             ))}
           </select>
-          {formErrors.subcategory && <span className="error-msg">{formErrors.subcategory}</span>}
+          {formErrors.subcategory && (
+            <span className="error-msg">{formErrors.subcategory}</span>
+          )}
 
           <textarea
             data-label="Description:"
@@ -424,7 +508,9 @@ const AdminPage = () => {
 
       {/* PRODUCTS TABLE - RESPONSIVE */}
       <div className="admin-section">
-        <h2>Products ({filteredProducts.length}) - {products.length} total</h2>
+        <h2>
+          Products ({filteredProducts.length}) - {products.length} total
+        </h2>
         <div className="search-container">
           <input
             type="text"
@@ -435,194 +521,255 @@ const AdminPage = () => {
           />
         </div>
         <div className="admin-products">
-              {filteredProducts.map((product) => (
-                <div key={product._id} className="product-card">
-                  <div className="card-row">
-                    <span className="card-label">ID:</span>
-                    <span className="card-value">{product.id}</span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Image:</span>
-                    {editingId === product._id ? (
+          {filteredProducts.map((product) => (
+            <div key={product._id} className="product-card">
+              <div className="card-row">
+                <span className="card-label">ID:</span>
+                <span className="card-value">{product.id}</span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Image:</span>
+                {editingId === product._id ? (
+                  <input
+                    value={editForm.image}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, image: e.target.value })
+                    }
+                    placeholder="Main Image URL"
+                    style={{ flex: 1 }}
+                  />
+                ) : (
+                  <img src={product.image} alt="" className="card-image" />
+                )}
+              </div>
+              {editingId === product._id ? (
+                <div
+                  className="card-row"
+                  style={{ flexDirection: "column", alignItems: "stretch" }}
+                >
+                  <span className="card-label">Additional Images:</span>
+                  <div className="images-section edit-images-section">
+                    <div className="image-input-row">
                       <input
-                        value={editForm.image}
-                        onChange={(e) => setEditForm({ ...editForm, image: e.target.value })}
-                        placeholder="Main Image URL"
-                        style={{ flex: 1 }}
+                        placeholder="Additional Image URL"
+                        value={editImageInput}
+                        onChange={(e) => setEditImageInput(e.target.value)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" &&
+                          (e.preventDefault(), addEditImage())
+                        }
                       />
-                    ) : (
-                      <img src={product.image} alt="" className="card-image" />
+                      <button
+                        type="button"
+                        className="add-image-btn"
+                        onClick={addEditImage}
+                      >
+                        <FiPlus /> Add
+                      </button>
+                    </div>
+                    {(editForm.images || []).length > 0 && (
+                      <div className="image-list">
+                        {(editForm.images || []).map((img, idx) => (
+                          <div key={idx} className="image-item">
+                            <img
+                              src={img}
+                              alt={`Additional ${idx + 1}`}
+                              className="image-thumb"
+                            />
+                            <input
+                              value={img}
+                              onChange={(e) =>
+                                updateEditImage(idx, e.target.value)
+                              }
+                              placeholder="Image URL"
+                            />
+                            <button
+                              type="button"
+                              className="remove-image-btn"
+                              onClick={() => removeEditImage(idx)}
+                            >
+                              <FiTrash2 />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {editingId === product._id ? (
-                    <div className="card-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-                      <span className="card-label">Additional Images:</span>
-                      <div className="images-section edit-images-section">
-                        <div className="image-input-row">
-                          <input
-                            placeholder="Additional Image URL"
-                            value={editImageInput}
-                            onChange={(e) => setEditImageInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addEditImage())}
-                          />
-                          <button type="button" className="add-image-btn" onClick={addEditImage}>
-                            <FiPlus /> Add
-                          </button>
-                        </div>
-                        {(editForm.images || []).length > 0 && (
-                          <div className="image-list">
-                            {(editForm.images || []).map((img, idx) => (
-                              <div key={idx} className="image-item">
-                                <img src={img} alt={`Additional ${idx + 1}`} className="image-thumb" />
-                                <input
-                                  value={img}
-                                  onChange={(e) => updateEditImage(idx, e.target.value)}
-                                  placeholder="Image URL"
-                                />
-                                <button type="button" className="remove-image-btn" onClick={() => removeEditImage(idx)}>
-                                  <FiTrash2 />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    product.images && product.images.length > 0 && (
-                      <div className="card-row">
-                        <span className="card-label">More Images:</span>
-                        <div className="card-value more-images">
-                          {product.images.map((img, idx) => (
-                            <img key={idx} src={img} alt={`${product.title} ${idx + 1}`} className="card-image-thumb" />
-                          ))}
-                        </div>
-                      </div>
-                    )
-                  )}
-                  <div className="card-row">
-                    <span className="card-label">Title:</span>
-                    <span className="card-value">
-                      {editingId === product._id ? (
-                        <input
-                          value={editForm.title}
-                          onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                        />
-                      ) : (
-                        product.title
-                      )}
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Price:</span>
-                    <span className="card-value">
-                      {editingId === product._id ? (
-                        <input
-                          value={editForm.price}
-                          onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
-                        />
-                      ) : (
-                        `₹${product.price}`
-                      )}
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Category:</span>
-                    <span className="card-value">
-                      {editingId === product._id ? (
-                        <select
-                          value={editForm.category}
-                          onChange={(e) => setEditForm({ ...editForm, category: e.target.value, subcategory: "" })}
-                        >
-                          <option value="">Select Category</option>
-                          {categories.map((cat) => (
-                            <option key={cat._id} value={cat._id}>
-                              {cat.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        categoryMap[product.category] || product.category
-                      )}
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Subcategory:</span>
-                    <span className="card-value">
-                      {editingId === product._id ? (
-                        <select
-                          value={editForm.subcategory}
-                          onChange={(e) => setEditForm({ ...editForm, subcategory: e.target.value })}
-                          disabled={!editForm.category}
-                        >
-                          <option value="">
-                            {editForm.category ? "Select Subcategory" : "Choose category first"}
-                          </option>
-                          {editFormSubcategories.map((sub) => (
-                            <option key={sub._id} value={sub._id}>
-                              {sub.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        subcategoryMap[product.subcategory] || product.subcategory
-                      )}
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Trending:</span>
-                    <span className="card-value">
-                      <button className="trending-toggle" onClick={() => toggleTrending(product._id)}>
-                        <FiStar /> {product.trending ? 'Yes' : 'No'}
-                      </button>
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Description:</span>
-                    <span className="card-value">
-                      {editingId === product._id ? (
-                        <textarea 
-                          value={editForm.description} 
-                          onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                          rows="3"
-                          style={{ width: '100%', resize: 'vertical' }}
-                        />
-                      ) : (
-                        product.description.slice(0, 50) + '...'
-                      )}
-                    </span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">Actions:</span>
-                    <div className="action-buttons">
-                      {editingId === product._id ? (
-                        <>
-                          <button className="save-btn" onClick={() => saveEdit(product._id)}>
-                            Save
-                          </button>
-                          <button className="cancel-btn" onClick={cancelEdit}>
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button className="edit-btn" onClick={() => startEdit(product)}>
-                            <FiEdit3 /> Edit
-                          </button>
-                          <button className="delete-btn" onClick={() => deleteProduct(product._id)}>
-                            <FiTrash2 /> Delete
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
                 </div>
-              ))}
+              ) : (
+                product.images &&
+                product.images.length > 0 && (
+                  <div className="card-row">
+                    <span className="card-label">More Images:</span>
+                    <div className="card-value more-images">
+                      {product.images.map((img, idx) => (
+                        <img
+                          key={idx}
+                          src={img}
+                          alt={`${product.title} ${idx + 1}`}
+                          className="card-image-thumb"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
+              )}
+              <div className="card-row">
+                <span className="card-label">Title:</span>
+                <span className="card-value">
+                  {editingId === product._id ? (
+                    <input
+                      value={editForm.title}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, title: e.target.value })
+                      }
+                    />
+                  ) : (
+                    product.title
+                  )}
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Price:</span>
+                <span className="card-value">
+                  {editingId === product._id ? (
+                    <input
+                      value={editForm.price}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, price: e.target.value })
+                      }
+                    />
+                  ) : (
+                    `₹${product.price}`
+                  )}
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Category:</span>
+                <span className="card-value">
+                  {editingId === product._id ? (
+                    <select
+                      value={editForm.category}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          category: e.target.value,
+                          subcategory: "",
+                        })
+                      }
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    categoryMap[product.category] || product.category
+                  )}
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Subcategory:</span>
+                <span className="card-value">
+                  {editingId === product._id ? (
+                    <select
+                      value={editForm.subcategory}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          subcategory: e.target.value,
+                        })
+                      }
+                      disabled={!editForm.category}
+                    >
+                      <option value="">
+                        {editForm.category
+                          ? "Select Subcategory"
+                          : "Choose category first"}
+                      </option>
+                      {editFormSubcategories.map((sub) => (
+                        <option key={sub._id} value={sub._id}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    subcategoryMap[product.subcategory] || product.subcategory
+                  )}
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Trending:</span>
+                <span className="card-value">
+                  <button
+                    className="trending-toggle"
+                    onClick={() => toggleTrending(product._id)}
+                  >
+                    <FiStar /> {product.trending ? "Yes" : "No"}
+                  </button>
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Description:</span>
+                <span className="card-value">
+                  {editingId === product._id ? (
+                    <textarea
+                      value={editForm.description}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
+                      rows="3"
+                      style={{ width: "100%", resize: "vertical" }}
+                    />
+                  ) : (
+                    product.description.slice(0, 50) + "..."
+                  )}
+                </span>
+              </div>
+              <div className="card-row">
+                <span className="card-label">Actions:</span>
+                <div className="action-buttons">
+                  {editingId === product._id ? (
+                    <>
+                      <button
+                        className="save-btn"
+                        onClick={() => saveEdit(product._id)}
+                      >
+                        Save
+                      </button>
+                      <button className="cancel-btn" onClick={cancelEdit}>
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="edit-btn"
+                        onClick={() => startEdit(product)}
+                      >
+                        <FiEdit3 /> Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => deleteProduct(product._id)}
+                      >
+                        <FiTrash2 /> Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default AdminPage;
-

@@ -24,7 +24,6 @@ export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
     .populate('items');
-    console.log("Order ID from params:", req.params.id);
 
     // Also populate product inside each OrderItem
     if (order && order.items) {

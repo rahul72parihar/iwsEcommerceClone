@@ -43,12 +43,24 @@ export default function SearchPage() {
     }
   }, [query, performSearch]);
 
+  useEffect(() => {
+  const delay = setTimeout(() => {
+    if (localQuery.trim()) {
+      performSearch(localQuery);
+      setSearchParams({ q: query });
+    } else {
+      setFilteredProducts([]);
+    }
+  }, 400); // 400ms delay
+
+  return () => clearTimeout(delay);
+}, [localQuery, performSearch, setSearchParams]);
+
   const handleMobileSearch = () => {
     const newQuery = localQuery.trim();
     if (newQuery) {
       setSearchParams({ q: newQuery });
       setShowInput(false);
-      setLocalQuery('');
     }
   };
 

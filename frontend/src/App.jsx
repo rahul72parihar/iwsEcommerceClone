@@ -1,10 +1,8 @@
 import "../styles/App.css";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { Routes, Route, Outlet, useLocation } from "react-router-dom";
-
-
 
 import Header from "../components/layout/Header/Header";
 import Sidebar from "../components/layout/Sidebar/Sidebar";
@@ -31,14 +29,11 @@ import { loadCart } from "./store/slices/uiSlice";
 import MyOrders from "../pages/MyOrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage";
 
-
-
 function Layout() {
   const location = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [location.pathname]);
-
 
   return (
     <div className="app">
@@ -53,22 +48,19 @@ function Layout() {
   );
 }
 
-
-
 function App() {
   const dispatch = useDispatch();
-  const authLoading = useSelector(state => state.auth.loading);
+  const authLoading = useSelector((state) => state.auth.loading);
 
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-useEffect(() => {
-  dispatch(loadCart());
-}, [isAuthenticated]);
+  useEffect(() => {
+    dispatch(loadCart());
+  }, [isAuthenticated]);
 
   useEffect(() => {
     dispatch(loadUser());
   }, []);
-
 
   if (authLoading) {
     return <div className="loading">Loading...</div>;
@@ -89,8 +81,8 @@ useEffect(() => {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-<Route path="/myorders" element={<MyOrders />} />
-<Route path="/myorders/:id" element={<OrderDetailPage />} />
+        <Route path="/myorders" element={<MyOrders />} />
+        <Route path="/myorders/:id" element={<OrderDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/banners" element={<AdminBannerPage />} />
         <Route path="/admin/orders" element={<AdminOrdersPage />} />
@@ -99,6 +91,5 @@ useEffect(() => {
     </Routes>
   );
 }
-
 
 export default App;
