@@ -16,7 +16,7 @@ export default function Sidebar() {
   const cartItems = useSelector((state) => state.ui.cartItems);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isAdmin = useSelector((state) => state.auth.isAdmin);
-  const categories = useSelector((state)=> state.categories)
+  const categories = useSelector((state) => state.categories);
 
   useEffect(() => {
     if (isOpen) {
@@ -95,12 +95,16 @@ export default function Sidebar() {
               Cart ({cartItems})
             </Link>
           </div>
-          <Link to="/profile" onClick={handleClose}>
-            <div className="sidebar-section">Profile</div>
-          </Link>
-          <Link to="/myorders" onClick={handleClose}>
-            <div className="sidebar-section">My Orders</div>
-          </Link>
+          {isAuthenticated && (
+            <Link to="/profile" onClick={handleClose}>
+              <div className="sidebar-section">Profile</div>
+            </Link>
+          )}
+          {isAuthenticated && (
+            <Link to="/myorders" onClick={handleClose}>
+              <div className="sidebar-section">My Orders</div>
+            </Link>
+          )}
 
           {/* Auth Section */}
           <div className="sidebar-section">
