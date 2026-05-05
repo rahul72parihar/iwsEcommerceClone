@@ -116,7 +116,12 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-
+.google-login-btn {
+  margin-top: 0.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 /* ===== FOOTER ===== */
 
 .login-footer {

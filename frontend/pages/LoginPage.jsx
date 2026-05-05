@@ -96,6 +96,7 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign In"}
             </button>
             <GoogleLogin
+              className="google-login-btn"
               onSuccess={handleGoogleSuccess}
               onError={() => console.log("Google login error")}
             />
