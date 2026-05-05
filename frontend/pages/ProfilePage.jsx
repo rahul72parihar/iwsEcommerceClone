@@ -17,9 +17,6 @@ export default function ProfilePage() {
     dispatch(logout());
     navigate("/");
   };
-  const handleMyOrders = () => {
-    navigate("/myorders");
-  };
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -39,7 +36,6 @@ export default function ProfilePage() {
             <h2>{user.name || "User"}</h2>
             <p className="email">{user.email}</p>
             <p className="userId">ID: {user.id?.slice(-6) || "N/A"}</p>
-            <p className="link" onClick={handleMyOrders}> MY ORDERS </p>
           </div>
           <button className="logoutBtn" onClick={handleLogout}>
             Sign Out
