@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { FiPlus } from 'react-icons/fi';
-import { apiService } from '../services/api';
-import { setCartCount, addToast } from '../src/store/slices/uiSlice';
-import '../styles/ProductDetail.css';
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { FiPlus } from "react-icons/fi";
+import { apiService } from "../services/api";
+import { setCartCount, addToast } from "../src/store/slices/uiSlice";
+import "../styles/ProductDetail.css";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState('');
+  const [modalImageIndex, setModalImageIndex] = useState(0);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
@@ -24,8 +24,15 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
 
-  const openModal = (image) => {
-    setModalImage(image);
+  const allImages = product
+    ? [product.image, ...(product.images || [])].filter(Boolean)
+    : [];
+
+  const modalImage =
+    allImages[modalImageIndex] || allImages[0] || "";
+
+  const openModal = (imageIndex) => {
+    setModalImageIndex(imageIndex);
     setIsModalOpen(true);
   };
 
@@ -33,11 +40,27 @@ export default function ProductDetail() {
     setIsModalOpen(false);
   };
 
+  const goPrevModal = () => {
+    if (!allImages.length) return;
+
+    setModalImageIndex(
+      (prev) => (prev - 1 + allImages.length) % allImages.length,
+    );
+  };
+
+  const goNextModal = () => {
+    if (!allImages.length) return;
+
+    setModalImageIndex(
+      (prev) => (prev + 1) % allImages.length,
+    );
+  };
+
   const handleCarouselScroll = () => {
     if (carouselRef.current) {
       const index = Math.round(
         carouselRef.current.scrollLeft /
-          carouselRef.current.offsetWidth
+          carouselRef.current.offsetWidth,
       );
 
       setCurrentSlide(index);
@@ -48,7 +71,7 @@ export default function ProductDetail() {
     if (carouselRef.current) {
       carouselRef.current.scrollTo({
         left: carouselRef.current.offsetWidth * index,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
 
@@ -62,13 +85,13 @@ export default function ProductDetail() {
 
         const response = await apiService.getProduct(id);
 
-        if (response.status === 'success') {
+        if (response.status === "success") {
           setProduct(response.data);
         } else {
-          setError('Product not found');
+          setError("Product not found");
         }
       } catch {
-        setError('Failed to load product');
+        setError("Failed to load product");
       } finally {
         setLoading(false);
       }
@@ -77,13 +100,48 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        closeModal();
+        return;
+      }
+
+      const len = allImages.length || 1;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+
+        setModalImageIndex(
+          (prev) => (prev - 1 + len) % len,
+        );
+      }
+
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+
+        setModalImageIndex(
+          (prev) => (prev + 1) % len,
+        );
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isModalOpen, allImages]);
+
   const handleAddToCart = async () => {
     if (!token) {
       dispatch(
         addToast({
-          type: 'error',
-          message: 'Please login to add to cart',
-        })
+          type: "error",
+          message: "Please login to add to cart",
+        }),
       );
 
       return;
@@ -96,29 +154,29 @@ export default function ProductDetail() {
     try {
       const result = await apiService.addToCart(product._id, 1);
 
-      if (result.status === 'success') {
+      if (result.status === "success") {
         dispatch(setCartCount(result.data?.items?.length || 0));
 
         dispatch(
           addToast({
-            type: 'success',
-            message: 'Added to cart!',
-          })
+            type: "success",
+            message: "Added to cart!",
+          }),
         );
       } else {
         dispatch(
           addToast({
-            type: 'error',
-            message: 'Failed to add to cart',
-          })
+            type: "error",
+            message: "Failed to add to cart",
+          }),
         );
       }
     } catch {
       dispatch(
         addToast({
-          type: 'error',
-          message: 'Network error',
-        })
+          type: "error",
+          message: "Network error",
+        }),
       );
     }
 
@@ -140,11 +198,8 @@ export default function ProductDetail() {
 
           <div className="productInfo">
             <div className="skeletonTitle"></div>
-
             <div className="skeletonPrice"></div>
-
             <div className="skeletonCategory"></div>
-
             <div className="skeletonButton"></div>
 
             <div className="productDescription">
@@ -161,34 +216,27 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="error">
-        {error || 'Product not found'}
+        {error || "Product not found"}
       </div>
     );
   }
-
-  const allImages = [
-    product.image,
-    ...(product.images || []),
-  ].filter(Boolean);
 
   return (
     <main className="productDetailMain">
       <div className="productDetailContainer">
         <div className="productImages">
-          {/* Desktop Grid */}
           <div className="imageGrid">
             {allImages.map((img, idx) => (
               <div key={idx} className="imageGridItem">
                 <img
                   src={img}
                   alt={`${product.title} ${idx + 1}`}
-                  onClick={() => openModal(img)}
+                  onClick={() => openModal(idx)}
                 />
               </div>
             ))}
           </div>
 
-          {/* Mobile Carousel */}
           <div
             className="mobileCarousel"
             ref={carouselRef}
@@ -199,7 +247,7 @@ export default function ProductDetail() {
                 <img
                   src={img}
                   alt={`${product.title} ${idx + 1}`}
-                  onClick={() => openModal(img)}
+                  onClick={() => openModal(idx)}
                 />
               </div>
             ))}
@@ -211,7 +259,7 @@ export default function ProductDetail() {
                 <button
                   key={idx}
                   className={`carouselDot ${
-                    idx === currentSlide ? 'active' : ''
+                    idx === currentSlide ? "active" : ""
                   }`}
                   onClick={() => scrollToSlide(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
@@ -222,16 +270,14 @@ export default function ProductDetail() {
         </div>
 
         <div className="productInfo">
-          <h1 className="productTitle">
-            {product.title}
-          </h1>
+          <h1 className="productTitle">{product.title}</h1>
 
           <p className="productPrice">
             ₹{Number(product.price).toFixed(2)}
           </p>
 
           <div className="productCategory">
-            Category:{' '}
+            Category:{" "}
             {product.category?.name || product.category}
           </div>
 
@@ -242,14 +288,13 @@ export default function ProductDetail() {
               onClick={handleAddToCart}
             >
               <FiPlus />
-              {' '}
-              {isAdding ? 'Adding...' : 'Add to Cart'}
+              {" "}
+              {isAdding ? "Adding..." : "Add to Cart"}
             </button>
           </div>
 
           <div className="productDescription">
             <h3>Description</h3>
-
             <p>{product.description}</p>
           </div>
         </div>
@@ -264,9 +309,36 @@ export default function ProductDetail() {
             className="imageModalContent"
             onClick={(e) => e.stopPropagation()}
           >
+            {allImages.length > 1 && (
+              <>
+                <button
+                  className="imageModalNavBtn left"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goPrevModal();
+                  }}
+                  type="button"
+                >
+                  ‹
+                </button>
+
+                <button
+                  className="imageModalNavBtn right"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goNextModal();
+                  }}
+                  type="button"
+                >
+                  ›
+                </button>
+              </>
+            )}
+
             <button
               className="imageModalClose"
               onClick={closeModal}
+              type="button"
             >
               ×
             </button>

@@ -164,7 +164,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (loading) return <div className="checkout-loading"><h1>Loading...</h1></div>;
+  // if (loading) return <div className="checkout-loading"><h1>Loading...</h1></div>;
 
   return (
     <div className="checkout-page">

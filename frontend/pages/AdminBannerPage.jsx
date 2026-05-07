@@ -190,7 +190,7 @@ const AdminBannerPage = () => {
     }
   };
 
-  if (loading) return <div className="admin-loading">Loading banners...</div>;
+  // if (loading) return <div className="admin-loading">Loading banners...</div>;
 
   return (
     <div className="admin-page">

@@ -257,8 +257,8 @@ const AdminCategoriesPage = () => {
     }
   };
 
-  if (loading)
-    return <div className="admin-loading">Loading categories...</div>;
+  // if (loading)
+  //   return <div className="admin-loading">Loading categories...</div>;
 
   return (
     <div className="admin-page">

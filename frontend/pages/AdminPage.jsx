@@ -294,8 +294,8 @@ const AdminPage = () => {
       s.category?._id === editForm.category || s.category === editForm.category,
   );
 
-  if (loading || catalogLoading)
-    return <div className="admin-loading">Loading admin panel...</div>;
+  // if (loading || catalogLoading)
+  //   return <div className="admin-loading">Loading admin panel...</div>;
 
   return (
     <div className="admin-page">
