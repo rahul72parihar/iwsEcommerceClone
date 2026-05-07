@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    paymentMethod: { type: String, enum: ["online", "cod"], required: true }, // Changed to lowercase to match frontend
+    paymentMethod: { type: String, enum: ["PREPAID", "COD"], required: true }, // Changed to lowercase to match frontend
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],

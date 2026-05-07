@@ -77,7 +77,7 @@ export const createCheckout = async (req, res) => {
         user: userId,
         total,
         shippingAddress: address,
-        paymentMethod: "cod",
+        paymentMethod: "COD",
         paymentStatus: "pending",
         deliveryStatus: "packing",
       });
@@ -117,7 +117,7 @@ export const createCheckout = async (req, res) => {
       user: userId,
       total,
       shippingAddress: address,
-      paymentMethod: "online",
+      paymentMethod: "PREPAID",
       paymentStatus: "pending",
       deliveryStatus: "packing",
       razorpayOrderId: razorpayOrder.id,

@@ -29,6 +29,7 @@ export default function OrderDetailPage() {
 
         if (result.status === 'success') {
           setOrder(result.data);
+          console.log("Fetched Order:", result.data);
         } else {
           setError(result.data?.message || 'Failed to fetch order');
         }
@@ -86,6 +87,12 @@ export default function OrderDetailPage() {
             <span>{new Date(order.createdAt).toLocaleDateString()}</span>
           </div>
           
+          {order.paymentMethod && (
+            <div className="info-row">
+              <span className="label">Payment Method:</span>
+              <span>{order.paymentMethod}</span>
+            </div>
+          )}
           {order.paidAt && (
             <div className="info-row">
               <span className="label">Paid Date:</span>
@@ -93,10 +100,12 @@ export default function OrderDetailPage() {
             </div>
           )}
 
-          <div className="info-row">
-            <span className="label">Razorpay Order ID:</span>
-            <span>{order.razorpayOrderId}</span>
-          </div>
+          {order.razorpayOrderId && (
+            <div className="info-row">
+              <span className="label">Razorpay Order ID:</span>
+              <span>{order.razorpayOrderId}</span>
+            </div>
+          )}
 
           {order.razorpayPaymentId && (
             <div className="info-row">
@@ -142,9 +151,10 @@ export default function OrderDetailPage() {
       {order.shippingAddress && (
         <div className="shipping-address-card">
           <h2 className="address-heading">Shipping Address</h2>
-          <p>{order.shippingAddress.address}</p>
-          <p>{order.shippingAddress.city} - {order.shippingAddress.postalCode}</p>
-          <p>{order.shippingAddress.country}</p>
+          <p>{order.shippingAddress.fullName}</p>
+          <p>{order.shippingAddress.street}</p>
+          <p>{order.shippingAddress.city} - {order.shippingAddress.zipCode}</p>
+          <p>{order.shippingAddress.state}</p>
         </div>
       )}
     </div>
