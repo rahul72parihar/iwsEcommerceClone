@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiService } from '../services/api.js';
 import '../styles/MyOrders.css';
+import '../styles/OrderImageSkeleton.css';
 
 export default function OrderDetailPage() {
   const [order, setOrder] = useState(null);
@@ -116,12 +117,15 @@ export default function OrderDetailPage() {
       <div className="order-items-list">
         {order.items && order.items.map((item) => (
           <div key={item._id} className="order-item-card">
-            {item.image && (
-              <img 
-                src={item.image} 
-                alt={item.name} 
+            {item.image ? (
+              <img
+                src={item.image}
+                alt={item.name}
                 className="item-image"
+                loading="eager"
               />
+            ) : (
+              <div className="item-image item-image--placeholder" />
             )}
             <div className="item-details">
               <h3 className="item-name">{item.name}</h3>

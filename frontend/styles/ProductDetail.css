@@ -267,3 +267,72 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+/* ===== SKELETON ===== */
+
+.skeletonImage,
+.skeletonTitle,
+.skeletonPrice,
+.skeletonCategory,
+.skeletonButton,
+.skeletonDescLine {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e4e4e4 37%,
+    #f0f0f0 63%
+  );
+  background-size: 400% 100%;
+  animation: skeletonLoading 1.4s ease infinite;
+  border-radius: 8px;
+}
+
+.skeletonImage {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+
+.skeletonPrice {
+  width: 120px;
+  height: 24px;
+  margin-bottom: 0.8rem;
+}
+
+.skeletonCategory {
+  width: 160px;
+  height: 18px;
+  margin-bottom: 1.5rem;
+}
+
+.skeletonButton {
+  width: 300px;
+  max-width: 100%;
+  height: 44px;
+  margin-bottom: 2rem;
+}
+
+.skeletonDescLine {
+  width: 100%;
+  height: 14px;
+  margin-bottom: 0.7rem;
+}
+
+.skeletonDescLine.short {
+  width: 70%;
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}

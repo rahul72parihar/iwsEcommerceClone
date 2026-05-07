@@ -208,7 +208,13 @@
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
+  background: #f6f6f6;
 }
+
+.item-image--placeholder{
+  background: #f0f0f0;
+}
+
 
 .item-details {
   flex: 1;

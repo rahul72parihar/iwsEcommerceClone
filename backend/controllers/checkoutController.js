@@ -5,6 +5,13 @@ import Product from "../models/Product.js";
 import Order from "../models/Orders.js";
 import OrderItem from "../models/OrderItem.js";
 
+const deriveStatus = (paymentStatus, deliveryStatus) => {
+  // Backward-compatible single `status` for UI
+  if (paymentStatus === "paid") return "paid";
+  if (paymentStatus === "failed") return "failed";
+  return deliveryStatus || paymentStatus || "pending";
+};
+
 // Lazy Razorpay instance
 let razorpayInstance = null;
 
@@ -62,17 +69,17 @@ export const createCheckout = async (req, res) => {
     }
 
     // Delete previous pending orders
-    await Order.deleteMany({ user: userId, status: "pending" });
+    await Order.deleteMany({ user: userId, paymentStatus: "pending" });
 
     // ================= COD FLOW =================
     if (paymentMethod === "cod") {
       const order = await Order.create({
         user: userId,
-        items: [],
         total,
-        address,
+        shippingAddress: address,
         paymentMethod: "cod",
-        status: "placed",
+        paymentStatus: "pending",
+        deliveryStatus: "packing",
       });
 
       const orderItemIds = [];
@@ -90,12 +97,12 @@ export const createCheckout = async (req, res) => {
         orderItemIds.push(orderItem._id);
       }
 
-      order.items = orderItemIds;
       await order.save();
 
       return res.json({
         success: true,
         message: "Order placed with Cash on Delivery",
+        status: deriveStatus(order.paymentStatus, order.deliveryStatus),
       });
     }
 
@@ -108,12 +115,12 @@ export const createCheckout = async (req, res) => {
 
     const order = await Order.create({
       user: userId,
-      items: [],
       total,
-      address,
+      shippingAddress: address,
       paymentMethod: "online",
+      paymentStatus: "pending",
+      deliveryStatus: "packing",
       razorpayOrderId: razorpayOrder.id,
-      status: "pending",
     });
 
     const orderItemIds = [];
@@ -131,7 +138,6 @@ export const createCheckout = async (req, res) => {
       orderItemIds.push(orderItem._id);
     }
 
-    order.items = orderItemIds;
     await order.save();
 
     res.json({
@@ -140,6 +146,7 @@ export const createCheckout = async (req, res) => {
       amount: total,
       dbOrderId: order._id,
       keyId: process.env.RAZORPAY_KEY_ID,
+      status: deriveStatus(order.paymentStatus, order.deliveryStatus),
     });
   } catch (error) {
     console.error("Checkout error:", error);
@@ -173,7 +180,9 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    order.status = "paid";
+    // Persist schema-correct statuses
+    order.paymentStatus = "paid";
+    order.deliveryStatus = order.deliveryStatus || "packing";
     order.razorpayPaymentId = razorpayPaymentId;
     order.paidAt = new Date();
 

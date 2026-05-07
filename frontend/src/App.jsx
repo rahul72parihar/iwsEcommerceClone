@@ -63,7 +63,7 @@ function App() {
   }, []);
 
   if (authLoading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading"></div>;
   }
 
   return (

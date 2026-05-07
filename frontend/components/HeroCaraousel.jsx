@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiService } from "../services/api";
 import "../styles/HeroCaraousel.css";
+import "../styles/SkeletonShared.css";
 
 export default function HeroCarousel({ category = null }) {
   const [banners, setBanners] = useState([]);
@@ -36,10 +37,34 @@ export default function HeroCarousel({ category = null }) {
   }, [banners.length]);
 
   if (isLoading) {
-    return <div className="hero-loading">Loading Banner…</div>;
+    return (
+      <section className="hero hero--skeleton" aria-busy="true">
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <div className="hero-skeleton-title skeleton-box skeleton-rounded" />
+        </div>
+        <div className="hero-skeleton-dots">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <span key={i} className="dot" />
+          ))}
+        </div>
+      </section>
+    );
   }
   if (!banners?.length)
-    return <div className="hero-empty">No banners available</div>;
+    return (
+      <section className="hero hero--skeleton" aria-busy="true">
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <div className="hero-skeleton-title skeleton-box skeleton-rounded" />
+        </div>
+        <div className="hero-skeleton-dots">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <span key={i} className="dot" />
+          ))}
+        </div>
+      </section>
+    );
 
   const current = banners[index];
   const linkTarget = current?.link || "/";

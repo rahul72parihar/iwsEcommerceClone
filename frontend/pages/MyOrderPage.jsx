@@ -47,7 +47,6 @@ export default function MyOrders() {
     return (
       <div className="orders-page">
         <h1>My Orders</h1>
-        <p>Loading...</p>
       </div>
     );
   }

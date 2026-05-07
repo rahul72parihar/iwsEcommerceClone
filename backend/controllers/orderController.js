@@ -4,17 +4,48 @@ import OrderItem from '../models/OrderItem.js';
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id })
-      .populate('items')
       .sort({ createdAt: -1 });
 
-    // Also populate product inside each OrderItem
-    for (const order of orders) {
-      for (const item of order.items) {
-        await item.populate('product');
-      }
-    }
+    // Fetch items from OrderItem (since Orders schema no longer stores item ids)
+    const orderIds = orders.map((o) => o._id);
+    const orderItems = await OrderItem.find({ order: { $in: orderIds } })
+      .populate('product', 'title price image')
+      .sort({ createdAt: -1 });
 
-    res.json(orders);
+    const itemsByOrderId = orderItems.reduce((acc, item) => {
+      const key = item.order.toString();
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+
+
+    // Backward-compatible: add `status` derived from payment/delivery statuses
+    const normalizedOrders = orders.map((o) => {
+      const items = itemsByOrderId[o._id.toString()] || [];
+
+      // UI expects items with { _id, name, quantity, price, image }
+      const uiItems = items.map((it) => ({
+        _id: it._id,
+        name: it.name,
+        quantity: it.quantity,
+        price: it.price,
+        image: it.image || it.product?.image,
+      }));
+
+      return {
+        ...o.toObject(),
+        items: uiItems,
+        status:
+          o.paymentStatus === 'paid'
+            ? 'paid'
+            : o.paymentStatus === 'failed'
+              ? 'failed'
+              : o.deliveryStatus || o.paymentStatus || 'pending',
+      };
+    });
+
+    res.json(normalizedOrders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -22,15 +53,22 @@ export const getMyOrders = async (req, res) => {
 
 export const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
-    .populate('items');
+    const order = await Order.findById(req.params.id);
 
-    // Also populate product inside each OrderItem
-    if (order && order.items) {
-      for (const item of order.items) {
-        await item.populate('product');
-      }
-    }
+    const orderItems = order
+      ? await OrderItem.find({ order: order._id })
+          .populate('product', 'title price image')
+          .sort({ createdAt: -1 })
+      : [];
+
+    const uiItems = orderItems.map((it) => ({
+      _id: it._id,
+      name: it.name,
+      quantity: it.quantity,
+      price: it.price,
+      image: it.image || it.product?.image,
+    }));
+
 
     // ❌ Order not found
     if (!order) {
@@ -43,7 +81,21 @@ export const getOrderById = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    res.json(order);
+    // Backward-compatible: add `status` derived from payment/delivery statuses
+    const normalizedOrder = {
+      ...order.toObject(),
+      items: uiItems,
+      status:
+        order.paymentStatus === 'paid'
+          ? 'paid'
+          : order.paymentStatus === 'failed'
+            ? 'failed'
+            : order.deliveryStatus || order.paymentStatus || 'pending',
+    };
+
+    res.json(normalizedOrder);
+
+
 
   } catch (error) {
     res.status(500).json({ message: error.message });
