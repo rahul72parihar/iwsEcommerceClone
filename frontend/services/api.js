@@ -124,6 +124,21 @@ export const apiService = {
       headers: { Authorization: `Bearer ${getToken()}` },
     }),
 
+  adminGetOrders: () =>
+    fetchJSON(`${API_BASE}/admin/orders`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }),
+  adminUpdateOrderStatus: (id, data) =>
+    fetchJSON(`${API_BASE}/admin/orders/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(data),
+    }),
   adminToggleTrending: (id) =>
     fetchJSON(`${API_BASE}/admin/products/${id}/toggle-trending`, {
       method: "PATCH",

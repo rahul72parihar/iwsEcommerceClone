@@ -530,3 +530,199 @@ input[type="checkbox"] {
     height: 32px;
   }
 }
+
+/* =========================
+   ADMIN ORDERS PAGE
+========================= */
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header p {
+  color: var(--color-text-secondary);
+  margin-top: -10px;
+}
+
+.admin-orders-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-order-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.admin-order-top h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+
+.admin-order-date {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.admin-status {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.admin-status.packing {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.admin-status.shipped {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.admin-status.delivered {
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+.admin-status.cancelled {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.admin-order-info {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-order-info p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.admin-shipping {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.admin-shipping h4 {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.admin-shipping p {
+  margin: 0.25rem 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.admin-order-items {
+  margin-bottom: 1.5rem;
+}
+
+.admin-order-items h4 {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.admin-order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.admin-order-item:last-child {
+  border-bottom: none;
+}
+
+.admin-order-item img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.admin-order-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-order-item-info p {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.admin-order-item-info small {
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+}
+
+.admin-order-actions {
+  margin-top: 1rem;
+}
+
+.admin-order-actions select {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.admin-order-actions select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.admin-order-actions select:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .admin-order-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-order-item {
+    align-items: flex-start;
+  }
+
+  .admin-order-item img {
+    width: 60px;
+    height: 60px;
+  }
+}

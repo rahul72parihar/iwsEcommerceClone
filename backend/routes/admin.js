@@ -4,6 +4,8 @@ import PageBanner from '../models/PageBanner.js';
 import Category from '../models/Category.js';
 import Cart from '../models/Cart.js';
 import Subcategory from '../models/Subcategory.js';
+import Order from '../models/Orders.js';
+import OrderItem from '../models/OrderItem.js';
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
@@ -414,5 +416,96 @@ router.delete('/subcategories/:id', auth, requireAdmin, asyncHandler(async (req,
     message: 'Subcategory deleted'
   });
 }));
+
+/* =========================
+   ADMIN ORDER ROUTES
+========================= */
+
+// Get all orders
+router.get(
+  '/orders',
+  auth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const orders = await Order.find({})
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
+
+    const orderIds = orders.map((o) => o._id);
+
+    const orderItems = await OrderItem.find({
+      order: { $in: orderIds },
+    }).populate('product', 'title image');
+
+    const itemsByOrderId = orderItems.reduce(
+      (acc, item) => {
+        const key = item.order.toString();
+
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+
+        acc[key].push(item);
+
+        return acc;
+      },
+      {},
+    );
+
+    const normalizedOrders = orders.map((o) => {
+      const items =
+        itemsByOrderId[o._id.toString()] || [];
+
+      return {
+        ...o.toObject(),
+
+        items: items.map((it) => ({
+          _id: it._id,
+          name: it.name,
+          quantity: it.quantity,
+          price: it.price,
+          image:
+            it.image || it.product?.image,
+        })),
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: normalizedOrders,
+    });
+  }),
+);
+
+// Update order status
+router.put(
+  '/orders/:id/status',
+  auth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const { deliveryStatus } = req.body;
+
+    const order = await Order.findById(
+      req.params.id,
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      });
+    }
+
+    order.deliveryStatus =
+      deliveryStatus;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      data: order,
+    });
+  }),
+);
 
 export default router;
