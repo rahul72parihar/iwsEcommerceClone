@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { apiService } from "../services/api";
+import {
+  FiEdit3,
+  FiTrash2,
+  FiStar,
+  FiPlus,
+  FiImage,
+  FiLayers,
+} from "react-icons/fi";
 import "../styles/AdminPage.css";
 
 const AdminOrdersPage = () => {
@@ -78,14 +86,6 @@ const AdminOrdersPage = () => {
     return null;
   }
 
-  if (loading) {
-    return (
-      <div className="admin-page">
-        <h1>Loading orders...</h1>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="admin-page">
@@ -96,6 +96,26 @@ const AdminOrdersPage = () => {
 
   return (
     <div className="admin-page">
+      <h1>Admin Dashboard</h1>
+
+      {/* ADMIN NAVIGATION */}
+      <div className="admin-section">
+        <h2>Management Sections</h2>
+        <div className="admin-nav-cards">
+          <Link to="/admin" className="admin-nav-card">
+            <FiStar /> Products
+          </Link>
+          <Link to="/admin/banners" className="admin-nav-card">
+            <FiImage /> Banners
+          </Link>
+          <Link to="/admin/categories" className="admin-nav-card">
+            <FiLayers /> Categories
+          </Link>
+          <Link to="/admin/orders" className="admin-nav-card active">
+            <FiLayers /> Orders
+          </Link>
+        </div>
+      </div>
       <div className="admin-header">
         <h1>Orders Management</h1>
 

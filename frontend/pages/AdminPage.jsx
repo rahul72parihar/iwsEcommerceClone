@@ -314,6 +314,9 @@ const AdminPage = () => {
           <Link to="/admin/categories" className="admin-nav-card">
             <FiLayers /> Categories
           </Link>
+          <Link to="/admin/orders" className="admin-nav-card">
+            <FiLayers /> Orders
+          </Link>
         </div>
       </div>
 

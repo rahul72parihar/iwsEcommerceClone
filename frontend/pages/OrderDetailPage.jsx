@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { apiService } from '../services/api.js';
-import '../styles/MyOrders.css';
-import '../styles/OrderImageSkeleton.css';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiService } from "../services/api.js";
+import "../styles/MyOrders.css";
+import "../styles/OrderImageSkeleton.css";
 
 export default function OrderDetailPage() {
   const [order, setOrder] = useState(null);
@@ -17,7 +17,7 @@ export default function OrderDetailPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       if (!token) {
-        navigate('/login');
+        navigate("/login");
         return;
       }
 
@@ -27,14 +27,14 @@ export default function OrderDetailPage() {
       try {
         const result = await apiService.getOrderByid(id);
 
-        if (result.status === 'success') {
+        if (result.status === "success") {
           setOrder(result.data);
           console.log("Fetched Order:", result.data);
         } else {
-          setError(result.data?.message || 'Failed to fetch order');
+          setError(result.data?.message || "Failed to fetch order");
         }
       } catch (err) {
-        setError('Error fetching order');
+        setError("Error fetching order");
         console.error(err);
       } finally {
         setLoading(false);
@@ -49,8 +49,11 @@ export default function OrderDetailPage() {
   if (loading) {
     return (
       <div className="order-detail-page">
-        <h1>Order Details</h1>
-        <p>Loading...</p>
+        <button className="back-button" onClick={() => navigate("/myorders")}>
+          ← Back to My Orders
+        </button>
+
+        <h1 className="order-detail-heading">Order Details</h1>
       </div>
     );
   }
@@ -60,25 +63,23 @@ export default function OrderDetailPage() {
       <div className="order-detail-page">
         <h1>Order Details</h1>
         <p className="error">{error}</p>
-        <button onClick={() => navigate('/myorders')}>Back to My Orders</button>
+        <button onClick={() => navigate("/myorders")}>Back to My Orders</button>
       </div>
     );
   }
 
   return (
     <div className="order-detail-page">
-      <button className="back-button" onClick={() => navigate('/myorders')}>
+      <button className="back-button" onClick={() => navigate("/myorders")}>
         ← Back to My Orders
       </button>
 
-      <h1 className='order-detail-heading'>Order Details</h1>
+      <h1 className="order-detail-heading">Order Details</h1>
 
       <div className="order-info-card">
         <div className="order-info-header">
           <span>Order ID: {order._id}</span>
-          <span className={`status ${order.status}`}>
-            {order.status}
-          </span>
+          <span className={`status ${order.status}`}>{order.status}</span>
         </div>
 
         <div className="order-info-details">
@@ -86,7 +87,7 @@ export default function OrderDetailPage() {
             <span className="label">Order Date:</span>
             <span>{new Date(order.createdAt).toLocaleDateString()}</span>
           </div>
-          
+
           {order.paymentMethod && (
             <div className="info-row">
               <span className="label">Payment Method:</span>
@@ -124,28 +125,29 @@ export default function OrderDetailPage() {
       <h2 className="items-heading">Order Items</h2>
 
       <div className="order-items-list">
-        {order.items && order.items.map((item) => (
-          <div key={item._id} className="order-item-card">
-            {item.image ? (
-              <img
-                src={item.image}
-                alt={item.name}
-                className="item-image"
-                loading="eager"
-              />
-            ) : (
-              <div className="item-image item-image--placeholder" />
-            )}
-            <div className="item-details">
-              <h3 className="item-name">{item.name}</h3>
-              <p className="item-price">₹{item.price}</p>
-              <p className="item-quantity">Quantity: {item.quantity}</p>
-              <p className="item-subtotal">
-                Subtotal: ₹{item.price * item.quantity}
-              </p>
+        {order.items &&
+          order.items.map((item) => (
+            <div key={item._id} className="order-item-card">
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="item-image"
+                  loading="eager"
+                />
+              ) : (
+                <div className="item-image item-image--placeholder" />
+              )}
+              <div className="item-details">
+                <h3 className="item-name">{item.name}</h3>
+                <p className="item-price">₹{item.price}</p>
+                <p className="item-quantity">Quantity: {item.quantity}</p>
+                <p className="item-subtotal">
+                  Subtotal: ₹{item.price * item.quantity}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {order.shippingAddress && (
@@ -153,7 +155,9 @@ export default function OrderDetailPage() {
           <h2 className="address-heading">Shipping Address</h2>
           <p>{order.shippingAddress.fullName}</p>
           <p>{order.shippingAddress.street}</p>
-          <p>{order.shippingAddress.city} - {order.shippingAddress.zipCode}</p>
+          <p>
+            {order.shippingAddress.city} - {order.shippingAddress.zipCode}
+          </p>
           <p>{order.shippingAddress.state}</p>
         </div>
       )}
